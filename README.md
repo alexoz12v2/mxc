@@ -1,7 +1,5 @@
 # minmath
 small math library written with the sole purpose of learning
-<<<<<<< HEAD
-=======
 
 Planning:
 - implementing elementary math functions
@@ -12,4 +10,3 @@ Planning:
   - solving linear systems
   - fourier transform
   - ode and pde solving methods
->>>>>>> 0f306d9 (first commit)
