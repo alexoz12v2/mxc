@@ -1,3 +1,5 @@
+#include "finteger.hpp"
+
 #include <cassert>
 #include <cstdint>
 
