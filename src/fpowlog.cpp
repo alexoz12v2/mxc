@@ -38,7 +38,7 @@ namespace mmath
         else
         {
             assert(!isDenormal(x) && x != std::numeric_limits<float>::infinity() 
-                   && x != -std::numeric_limits<float>::infinity() && x!=x/*not NaN*/
+                   && x != -std::numeric_limits<float>::infinity() && x==x/*not NaN*/
                    && "float input is not a finite normalized number");
             assert(x>=0.f && "function 'float sqrt(float x)' expects nonnegative x value");
             
@@ -54,20 +54,36 @@ namespace mmath
         }
     }
     
-    constexpr float exp(float const x) {}
-    constexpr float expm1(float const x) {}
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float exp(float const x) {}
     
-    constexpr float pow(float const x,int const n) {}
-    constexpr float pow(float const x,float const y) {}
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float expm1(float const x) {}
     
-    constexpr float ln(float const x) {} 
-    constexpr float log(float const x) {}
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float ln(float const x) {} 
     
-    constexpr float lg(float const x) {}
-    constexpr float log10(float const x) {}
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float log(float const x) {}
     
-    constexpr float lb(float const x) {}
-    constexpr float log2(float const x) {}
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float pow(float const x,int const n) {}
     
-    constexpr float log(float const x, float const b) {}
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float pow(float const x,float const y) {}
+    
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float lg(float const x) {}
+    
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float log10(float const x) {}
+    
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float lb(float const x) {}
+    
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float log2(float const x) {}
+    
+    [[nodiscard("a mathematical function call should not be discarded")]] 
+        constexpr float log(float const x, float const b) {}
 }
