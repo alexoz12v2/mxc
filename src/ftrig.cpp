@@ -1,3 +1,5 @@
+#include "ftrig.hpp"
+
 #include "constants.hpp"
 #include "numfunctions.hpp"
 

@@ -2,6 +2,23 @@
 
 #include <limits>
 
+#ifndef MMATH_ALLOW_DENORMAL
+
+#define MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x)\
+assert(!isDenormal((x)) && (x) != std::numeric_limits<float>::infinity()\
+&& (x) != -std::numeric_limits<float>::infinity() && (x)==(x)/*not NaN*/\
+&& "float input is not a finite normalized number");
+
+#else
+
+#define MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x)\
+assert((x) != std::numeric_limits<float>::infinity()\
+&& (x) != -std::numeric_limits<float>::infinity() && (x)==(x)/*not NaN*/\
+&& "float input is not a finite normalized number");
+
+#endif // defined(MMATH_ALLOW_DENORMAL)
+
+
 namespace mmath
 {
     constexpr int32_t countLeadingZeroes(uint64_t n)
