@@ -9,8 +9,7 @@
 
 namespace mmath
 {
-    [[nodiscard("a mathematical function should not be discarded")]]
-        float constexpr floor(float const x)
+    float constexpr floor(float const x)
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         

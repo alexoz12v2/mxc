@@ -6,6 +6,7 @@
 #include <cassert>
 #include <type_traits>
 #include <limits>
+#include <bits>
 
 #define mmath_pow(x,n) mmath_pow##n(x)
 #define mmath_pow7(x)  (x)*(x)*(x)*(x)*(x)*(x)*(x)
@@ -60,7 +61,6 @@ namespace mmath
 // a boolean value equal to true if the current running platform implements IEEE754 binary 
 // floating points, and false otherwise. Define your own infinity? and epsilon with a backup
 // value for other systems which do not implement IEEE754
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float exp(float const x)
 {
     MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -75,7 +75,6 @@ constexpr float exp(float const x)
     return y;
 }
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float expm1(float const x) 
 {
     MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -87,7 +86,6 @@ constexpr float expm1(float const x)
     return res;
 }
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float ln(float const x) 
 {
     MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -118,14 +116,12 @@ constexpr float ln(float const x)
     return res;
 } 
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float log(float const x) 
 {
     // alias for ISO notation ln(x)
-    return ln(x)
+    return ln(x);
 }
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float pow(float const x,int32_t const n) 
 {
     MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -153,21 +149,38 @@ constexpr float pow(float const x,int32_t const n)
     }
 }
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
-constexpr float pow(float const x,float const y) {}
+constexpr float twoxp(int8_t x)
+{
+    uint32_t res_exp_bits = (x + 127) << 23;
+    float res = std::bit_cast<float>(res_exp_bits);
+    
+    return res;
+}
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
+constexpr float twoxp(float x)
+{
+    MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+    uint32_t x_bits = std::bit_cast<uint32_t>(x);
+    
+    // store the exponent [-126,+127]
+    int8_t x_exponent = (x_bits << 1) >> 24 - 127;
+    float twopower = twoxp(x_exponent);
+    
+    // taylor and then multiply
+}
+
+constexpr float pow(float const x,float const y) 
+{
+    // x^y = 2^lb(x^y) = 2^(y*lb(x))
+}
+
 constexpr float lg(float const x) {}
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float log10(float const x) {}
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float lb(float const x) {}
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float log2(float const x) {}
 
-[[nodiscard("a mathematical function call should not be discarded")]] 
 constexpr float log(float const x, float const b) {}
 }

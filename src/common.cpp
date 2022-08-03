@@ -46,9 +46,13 @@ namespace mmath
         return 63 - bitPosition[(n * 0x0218a392cd3d5dbf) >> 58];
     }
     
+    // WARNING: THIS FUNCTION SHOULD NOT BE USED AS THERE IS IN C++20 std::bit_cast, which is
+    // constexpr. It stays here because it has been a learning experience for me and I want to
+    // revisit it from time to time
     [[nodiscard]]
         constexpr uint32_t bits(float const f)
     {
+        
         // check for zero. DEFECT: cannot distinguish between negative and positive zero
         // because in C++ 0.f == -0.f
         if (f == 0.f)
