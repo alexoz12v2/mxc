@@ -19,7 +19,10 @@
 #define mmath_pow14(x) (x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)
 #define mmath_pow15(x) (x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)
 #define mmath_pow16(x) (x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)*(x)
-static constexpr ln2 = 0.69314718056;
+inline constexpr float ln2 = 0.69314718056;
+inline constexpr float ln2pow2halved = 0.240226506959;
+inline constexpr float ln2pow3div6 = 0.0555041086648;
+inline constexpr float ln2pow4div24 = 0.00961812910763;
 
 namespace mmath 
 {
@@ -160,13 +163,16 @@ constexpr float twoxp(int8_t x)
 constexpr float twoxp(float x)
 {
     MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-    uint32_t x_bits = std::bit_cast<uint32_t>(x);
+    uint32_t const x_bits = std::bit_cast<uint32_t>(x);
     
-    // store the exponent [-126,+127]
-    int8_t x_exponent = (x_bits << 1) >> 24 - 127;
-    float twopower = twoxp(x_exponent);
-    
-    // taylor and then multiply
+    // store the exponent [-126,+127], compute 
+    // taylor at 0 4th grade, valid in [-2,2] and then multiply by 
+    int8_t const x_exponent = (x_bits << 1) >> 24 - 127;
+    float const twopower = twoxp(x_exponent);
+    x -= twopower;
+    float const taylor = 1 + x*(ln2 + x*(ln2pow2halved + x*(ln2pow3div6 + x*ln2pow4div24)));
+    float const res = taylor * twoxp(static_cast<int8_t>(twopower));
+    return res;
 }
 
 constexpr float pow(float const x,float const y) 
