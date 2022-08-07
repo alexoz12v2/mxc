@@ -18,6 +18,9 @@ assert((x) != std::numeric_limits<float>::infinity()\
 
 #endif // defined(MMATH_ALLOW_DENORMAL)
 
+#if std::numeric_limits<float>::is_iec559 == false
+#error "minmath requires IEEE754 floating point"
+#endif
 
 namespace mmath
 {
