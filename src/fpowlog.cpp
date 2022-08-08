@@ -30,7 +30,7 @@ namespace mmath
     constexpr float sqrt(float const x) 
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-        assert(x>0.f && "function 'sqrt' takes nonnegative inputs\n");
+        assert(x>=0.f && "function 'sqrt' takes nonnegative inputs\n");
         
         // calculate rough approximation using least square regression
         uint32_t const x_bits = std::bit_cast<uint32_t>(x);
@@ -45,7 +45,29 @@ namespace mmath
         return res;
     }
     
-    constexpr float rsqrt(float const x) {}
+    constexpr struct{float sqrt;float rsqrt} sqrt_rsqrt(float const x)
+    {
+        // Goldschmidt's algorithm. Faster convergence than Newton-Raphson! Note: it computes both sqrt and rsqrt
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        assert(x>0.f && "function 'rsqrt' takes positive inputs\n");
+        float rsqrt_approx_curr  = 0.1875f*x*x - 0.625f*x + 0.9375f;
+        float sqrt_approx_curr   = 2.f*x*h0;
+        
+        for (uint8_t i = 0; i < 4u; ++i)
+        {
+            float const common_factor = 1.5f - sqrt_approx_curr*rsqrt_approx_curr;
+            rsqrt_approx_curr *= common_factor;
+            sqrt_approx_curr  *= common_factor;
+        }
+        
+        return {sqrt_approx_curr,rsqrt_approx_curr};
+    }
+    
+    constexpr float rsqrt(float const x) 
+    {
+        float res = sqrt_rsqrt.sqrt;
+        return res;
+    }
     
     // FIX = these functions are assuming that std::numeric_limits<float>::is_iec559, which is
     // a boolean value equal to true if the current running platform implements IEEE754 binary 
@@ -116,7 +138,7 @@ namespace mmath
         return ln(x);
     }
     
-    constexpr float pow(float const x,int32_t const n) 
+    constexpr float powi(float const x,int32_t const n) 
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         float res = 1.f;
