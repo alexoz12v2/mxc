@@ -45,13 +45,13 @@ namespace mmath
         return res;
     }
     
-    constexpr struct{float sqrt;float rsqrt} sqrt_rsqrt(float const x)
+    constexpr sqrt_rsqrt_return_t sqrt_rsqrt(float const x)
     {
         // Goldschmidt's algorithm. Faster convergence than Newton-Raphson! Note: it computes both sqrt and rsqrt
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x>0.f && "function 'rsqrt' takes positive inputs\n");
         float rsqrt_approx_curr  = 0.1875f*x*x - 0.625f*x + 0.9375f;
-        float sqrt_approx_curr   = 2.f*x*h0;
+        float sqrt_approx_curr   = 2.f*x*rsqrt_approx_curr;
         
         for (uint8_t i = 0; i < 4u; ++i)
         {
@@ -59,13 +59,14 @@ namespace mmath
             rsqrt_approx_curr *= common_factor;
             sqrt_approx_curr  *= common_factor;
         }
+        rsqrt_approx_curr *= 2.f;
         
         return {sqrt_approx_curr,rsqrt_approx_curr};
     }
     
     constexpr float rsqrt(float const x) 
     {
-        float res = sqrt_rsqrt.sqrt;
+        float res = sqrt_rsqrt(x).sqrt;
         return res;
     }
     
