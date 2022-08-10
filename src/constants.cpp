@@ -1,6 +1,4 @@
-
-#ifndef MINMATH_CONSTANTS_H
-#define MINMATH_CONSTANTS_H
+#include "constants.hpp"
 
 namespace mmath 
 {
@@ -10,4 +8,3 @@ namespace mmath
     
 }
 
-#endif // MINMATH_CONSTANTS_H
