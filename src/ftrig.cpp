@@ -15,6 +15,7 @@ namespace mmath
     constexpr float oneoverpi = 1.f/pi;
     constexpr float pihalved = pi/2.f;
     constexpr float twooverpi = 1.f/pihalved;
+    constexpr float pifourths = pi/4.f;
     
     // ------------------------ BASIC ------------------------
     
@@ -103,28 +104,144 @@ namespace mmath
         return res;
     }
     
-    constexpr float atan(float x) 
+    constexpr float atan(float const x) 
     {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        // https://www.desmos.com/calculator/gzmsinxkad
         int8_t const x_sign = -2*static_cast<int8_t>(std::bit_cast<uint32_t>(x) >> 31u)+1;
-        pihalved*x_sign−4x/(4x*x+1.f)
+        if (x <= 1.081f)
+        {
+            float const res = pifourths*x+0.186982f*x-0.191942f*x*x*x;
+            return res;
+        }
+        else
+        {
+            float const res = pihalved*x_sign−4x/(4x*x+1.f);
+            return res;
+        }
     }
-    constexpr float atan2() {}
     
-    // TODO = requires exponential
+    constexpr float atan2(float const x, float const y) 
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(y);
+        
+        // LSB = x > 0 second LSB = y == 0, third LSB = x == 0
+        uint8_t const conditions = 0 + static_cast<uint8_t>(std::bit_cast<uint32_t>(x)>>31u) 
+            + static_cast<uint8_t>(y < std::numeric_limits<float>::epsilon()
+                                   || y > -std::numeric_limits<float>::epsilon()) >> 1
+            + static_cast<uint8_t>(x < std::numeric_limits<float>::epsilon()
+                                   || x > -std::numeric_limits<float>::epsilon()) >> 2;
+        switch (conditions)
+        {
+            case 4 /*x>0,y!=0*/:
+            case 6 /*x>0,y==0*/:
+            {
+                float const res = 2.f*atan(y/(sqrt(x*x*(1.f+y*y/(x*x)))+x));
+                return res;
+            }
+            
+            case 1/*x==0,y!=0*/:
+            case 0 /*x<0,y!=0*/:
+            {
+                float const res = 2.f*atan((sqrt(x*x(1.f+y*y/(x*x)))-x)/y);
+                return res;
+            }
+            
+            case 2 /*x<0,y==0*/:
+            {
+                return pi;
+            }
+            
+            case 3/*x==0,y==0*/:
+            default:
+            {
+                assert(false && "function 'atan2': undefined or error\n");
+                // danger zone if release mode. To be defensive, return an impossible value
+                return std::numeric_limits<float>::nan();
+            }
+        }
+    }
+    
+    // TODO = now they all have naive implementations, upgrade them
     // --------------------- HYPERBOLIC ----------------------
     
-    constexpr float sinh() {}
-    constexpr float cosh() {}
-    constexpr float tanh() {}
+    constexpr float sinh(float const x)
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        
+        if (x > -0.5f*std::numeric_limits<float>::epsilon() 
+            || x < 0.5f*std::numeric_limits<float>::epsilon())
+        {
+            float const res = 0.5f*expm1(2.f*x)/exp(x);
+            return res;
+        }
+        else
+        {
+            float const res = 0.5f*(exp(x)-exp(-x));
+            return res;
+        }
+    }
+    
+    constexpr float cosh(float const x) 
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        
+        float const res = 0.5f*(exp(x)+exp(-x));
+        return res;
+    }
+    
+    constexpr float tanh(float const x) 
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        float const inv_exp2x_p1 = 1.f/(exp(2.f*x)+1.f);
+        
+        if (x > -0.5f*std::numeric_limits<float>::epsilon() 
+            || x < 0.5f*std::numeric_limits<float>::epsilon())
+        {
+            float const res = expm1(2.f*x)*inv_exp2x_p1;
+            return res;
+        }
+        else
+        {
+            float const res = (exp(2.f*x)-1.f)*inv_exp2x_p1;
+            return res;
+        }
+    }
     
     // ----------------- INVERSE HYPERBOLIC ------------------
     
-    constexpr float asinh() {}
-    constexpr float acosh() {}
+    constexpr float asinh(float const x) 
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        float const res = ln(x+sqrt(x^2+1));
+        return res;
+    }
+    
+    constexpr float acosh(float const x) 
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        assert(x>=1.f && "function 'acosh' is defined for values greater than 1.f");
+        
+        float const res = ln(x+x*sqrt(1-1/x*x));
+        return res;
+    }
+    
     constexpr float atanh() {}
     
     //----------------- ANGULAR CONVERSIONS ------------------
     
-    constexpr float deg2rad() {}
-    constexpr float rad2deg() {}
+    constexpr float deg2rad(float const x) 
+    {
+        constexpr float factor = pi/180.f;
+        float const res = factor*x;
+        return x;
+    }
+    
+    constexpr float rad2deg(float const x) 
+    {
+        constexpr float factor = 180.f/pi;
+        float const res = factor*x;
+        return x;
+    }
 }
