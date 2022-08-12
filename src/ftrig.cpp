@@ -214,20 +214,41 @@ namespace mmath
     constexpr float asinh(float const x) 
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-        float const res = ln(x+sqrt(x^2+1));
+        assert(x < std::bit_cast<float>(0x7f7fffff)
+               && "function 'asinh' would get Inf as a partial result with "
+               "given input\n");
+        
+        float const res = ln(x+sqrt(x*x+1.f));
         return res;
     }
     
     constexpr float acosh(float const x) 
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-        assert(x>=1.f && "function 'acosh' is defined for values greater than 1.f");
+        assert(x>=1.f && "function 'acosh' is defined for values greater than 1.f\n");
+        assert(x*x != std::numeric_limits<float>::infinity() 
+               && 1.f/x*x >= std::numeric_limits<float>::epsilon()
+               && "function 'acosh' is getting a too small input\n");
         
-        float const res = ln(x+x*sqrt(1-1/x*x));
+        float const res = ln(x+x*sqrt(1.f-1.f/x*x));
         return res;
     }
     
-    constexpr float atanh() {}
+    constexpr float atanh(float const x) 
+    {
+        MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+        assert(x <= 1.f && x >= -1.f 
+               && "function 'atanh' input does not belong to function domain\n");
+        assert(x >= std::numeric_limits<float>::epsilon() 
+               || x <= -std::numeric_limits<float>::epsilon());
+        
+        // artanh(x) = 0.5 ln((1+x)/(1-x)) = 0.5 ln(-1 + 2/(1-x))
+        // or artanh(x) = 0.5 (ln(1+x) - ln(1-x))
+        // first is faster because my ln implementation uses more divisions
+        
+        float const res = 0.5f*ln(-1.f + 2.f/(1.f-x));
+        return res;
+    }
     
     //----------------- ANGULAR CONVERSIONS ------------------
     

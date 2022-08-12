@@ -1,26 +1,7 @@
 #include "common.hpp"
 
 #include <limits>
-
-#ifndef MMATH_ALLOW_DENORMAL
-
-#define MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x)\
-assert(!isDenormal((x)) && (x) != std::numeric_limits<float>::infinity()\
-&& (x) != -std::numeric_limits<float>::infinity() && (x)==(x)/*not NaN*/\
-&& "float input is not a finite normalized number");
-
-#else
-
-#define MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x)\
-assert((x) != std::numeric_limits<float>::infinity()\
-&& (x) != -std::numeric_limits<float>::infinity() && (x)==(x)/*not NaN*/\
-&& "float input is not a finite normalized number");
-
-#endif // defined(MMATH_ALLOW_DENORMAL)
-
-#if std::numeric_limits<float>::is_iec559 == false
-#error "minmath requires IEEE754 floating point"
-#endif
+#include <cstdint>
 
 namespace mmath
 {
@@ -137,6 +118,7 @@ namespace mmath
         return (sign << 31) | (exponent << 23) | significand;
     }
     
+    // TODO = Change implementation to use bit_cast
     [[nodiscard]]
         constexpr bool isDenormal(float const f)
     {
