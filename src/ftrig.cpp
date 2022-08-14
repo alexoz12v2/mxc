@@ -60,7 +60,7 @@ namespace mmath
         // repetition can be achieved with modular arithmetic in(x)=mod(x+pi/2, pi)-pi/2
         // https://www.desmos.com/calculator/xrkvpwljyl
         // DISADVANTAGE = 1 mod + 2 division operations + evaluation of 4th deg polynomial
-        float in = (x+pihalved-pi*static_cast<int32_t>((x+pihalved)*oneoverpi))-pihalved;
+        float in = (x+pihalved-pi*static_cast<int64_t>((x+pihalved)*oneoverpi))-pihalved;
         
         // faster than using -2*static_cast<int32_t>(in > 0.f)+1. Proof:
         // https://www.quick-bench.com/q/gBLxxnYgEEKMI4cygqs0MzI4Rbk
