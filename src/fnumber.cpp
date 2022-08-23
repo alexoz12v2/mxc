@@ -75,16 +75,34 @@ namespace mmath
     auto constexpr gamma(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-        assert(x > 0 && "Stirling's approximation works for x > 0");
-        float const res = factorial(x - 1.f);
-        return res;
+        assert(x > 0.2f && "Rocktaeschel's approximation works for x > 0.2");
+	float constexpr sqrt_2pi = 2.50662827463f;
+
+	// Rocktaeschel's approximation for large x, the more precise one
+	// Gamma(x)~= x^(x-0.5)*e^-x*sqrt(2*pi)*poly(x)
+	// with poly(x)=1+1/(12*x)+1/(288*x^2)-139/(51840*x^3)-571/(2488320*x^4)+o(1/z^5)
+	// I will approximate poly(x) with a piecewise approximation
+	float const res = pow(x,x-0.5f)*exp(-x)*sqrt_2pi*(0.1f*(x-0.2f)/(x*x-0.14f*x+0.0049f)+1.f);
+	return res;
     }
     
+    // TODO = naive approach. Change in the future.
+    auto constexpr lngamma(float const x) -> float
+    {
+	MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+	assert(x > 0.2f && "Rocktaeschel's approximation works for x > 0.2");
+
+	float const res = ln(gamma);
+	return res;
+    }
+
     auto constexpr binomial_coeff(float const x, float const k) -> float 
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+	assert(x > 0.2f && k > 0.2f && "i")
         // gamma, lngamma, exp required
-        // binomial_coeff(n,k) == exp(lngamma(k+1)-lngamma(k+1)-lngamma(n-k+1))
+        // binomial_coeff(n,k) == exp(lngamma(x+1)-lngamma(k+1)-lngamma(n-k+1))
+	float const res = exp(lngamma(x+1.f)-lngamma(k+1.f)-lngamma(x-k+1.f));
     }
     
     auto constexpr gcd() -> int32_t {}
