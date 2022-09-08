@@ -7,6 +7,7 @@
 #include <bit>
 
 #include <minmath/common.hpp>
+#include <minmath/fpowlog.hpp>
 
 namespace mmath
 {
@@ -68,7 +69,7 @@ namespace mmath
         // Stirling's approximation https://en.wikipedia.org/wiki/Stirling%27s_approximation
         float constexpr sqrt_2pi = 2.50662827463f;
         float constexpr oneovere = 0.367879441171f;
-        float const res = srqt_2pi * pow(oneovere*x, x);
+        float const res = sqrt_2pi * pow(oneovere*x, x);
         return res;
     }
     
@@ -76,37 +77,38 @@ namespace mmath
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x > 0.2f && "Rocktaeschel's approximation works for x > 0.2");
-	float constexpr sqrt_2pi = 2.50662827463f;
+		float constexpr sqrt_2pi = 2.50662827463f;
 
-	// Rocktaeschel's approximation for large x, the more precise one
-	// Gamma(x)~= x^(x-0.5)*e^-x*sqrt(2*pi)*poly(x)
-	// with poly(x)=1+1/(12*x)+1/(288*x^2)-139/(51840*x^3)-571/(2488320*x^4)+o(1/z^5)
-	// I will approximate poly(x) with a piecewise approximation
-	float const res = pow(x,x-0.5f)*exp(-x)*sqrt_2pi*(0.1f*(x-0.2f)/(x*x-0.14f*x+0.0049f)+1.f);
-	return res;
+		// Rocktaeschel's approximation for large x, the more precise one
+		// Gamma(x)~= x^(x-0.5)*e^-x*sqrt(2*pi)*poly(x)
+		// with poly(x)=1+1/(12*x)+1/(288*x^2)-139/(51840*x^3)-571/(2488320*x^4)+o(1/z^5)
+		// I will approximate poly(x) with a piecewise approximation
+		float const res = pow(x,x-0.5f)*exp(-x)*sqrt_2pi*(0.1f*(x-0.2f)/(x*x-0.14f*x+0.0049f)+1.f);
+		return res;
     }
     
     // TODO = naive approach. Change in the future.
     auto constexpr lngamma(float const x) -> float
     {
-	MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-	assert(x > 0.2f && "Rocktaeschel's approximation works for x > 0.2");
+		MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
+		assert(x > 0.2f && "Rocktaeschel's approximation works for x > 0.2");
 
-	float const res = ln(gamma);
-	return res;
+		float const res = ln(gamma(x));
+		return res;
     }
 
     auto constexpr binomial_coeff(float const x, float const k) -> float 
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-	assert(x > 0.2f && k > 0.2f && "i")
+		assert(x > 0.2f && k > 0.2f && "i");
         // gamma, lngamma, exp required
         // binomial_coeff(n,k) == exp(lngamma(x+1)-lngamma(k+1)-lngamma(n-k+1))
-	float const res = exp(lngamma(x+1.f)-lngamma(k+1.f)-lngamma(x-k+1.f));
+		float const res = exp(lngamma(x+1.f)-lngamma(k+1.f)-lngamma(x-k+1.f));
     }
     
-    auto constexpr gcd() -> int32_t {}
-    auto constexpr lcm() -> int32_t {}
+	// TODO: implement
+    //auto constexpr gcd() -> int32_t {}
+    //auto constexpr lcm() -> int32_t {}
     MMATH_FORCE_INLINE auto constexpr abs(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -114,7 +116,7 @@ namespace mmath
         return res;
     }
     
-    MMATH_FORCE_INLINE auto constexpr min(float const x, float const y) -> float
+    MMATH_FORCE_INLINE auto constexpr min(float const x, float const y) -> bool
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(y);
@@ -130,9 +132,11 @@ namespace mmath
         return res;
     }
     
+	// you can declare default values for parameters either in the declaration or
+	// the definition, BUT NOT BOTH
     MMATH_FORCE_INLINE 
-        auto constexpr close(float const x,             float const y,
-                             float const rel_tol=1e-9f, float const abs_tol=1e-8f) -> bool
+    auto constexpr close(float const x,       float const y,
+                         float const rel_tol, float const abs_tol) -> bool
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(y);

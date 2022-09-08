@@ -5,24 +5,24 @@
 
 namespace mmath
 {
-    constexpr float sqrt(float const x);
-    struct sqrt_rsqrt_return_t {float sqrt;float rsqrt;};
-    constexpr sqrt_rsqrt_return_t sqrt_rsqrt(float const x);
-    constexpr float rsqrt(float const x);
-    constexpr float exp(float const x);
-    constexpr float expm1(float const x);
-    constexpr float ln(float const x);
-    constexpr float log(float const x);
-    constexpr float powi(float const x, int32_t const x);
-    constexpr float twoxpi(int8_t x);
-    constexpr float twoxp(float x);
-    constexpr float pow(float const x, float const y);
-    constexpr float lg(float const x);
-    constexpr float log10(float const x);
-    constexpr float lb(float const x);
-    constexpr float lbp1(float const x);
-    constexpr float log2(float const x);
-    constexpr float log(float const x, float const b);
+    constexpr auto sqrt(float const x) -> float;
+    struct sqrt_rsqrt_return_t {auto sqrt;float rsqrt;};
+    constexpr auto sqrt_rsqrt(auto const x) -> sqrt_rsqrt_return_t;
+    constexpr auto rsqrt(float const x) -> float;
+    constexpr auto exp(float const x) -> float;
+    constexpr auto expm1(float const x) -> float;
+    constexpr auto ln(float const x) -> float;
+    constexpr auto log(float const x) -> float;
+    constexpr auto powi(float const x, int32_t const i) -> float;
+    constexpr auto twoxpi(int8_t x) -> float;
+    constexpr auto twoxp(float x) -> float;
+    constexpr auto pow(float const x, float const y) -> float;
+    constexpr auto lg(float const x) -> float;
+    constexpr auto log10(float const x) -> float;
+    constexpr auto lb(float const x) -> float;
+    constexpr auto lbp1(float const x) -> float;
+    constexpr auto log2(float const x) -> float;
+    constexpr auto log(float const x, float const b) -> float;
 }
 
 #endif //MMATH_FPOWLOG_HPP
