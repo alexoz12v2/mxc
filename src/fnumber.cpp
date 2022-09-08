@@ -1,12 +1,12 @@
-#include "fnumber.hpp"
-
-#include "common.hpp"
+#include "minmath/fnumber.hpp"
 
 #include <cassert>
 #include <cstdint>
 #include <type_traits>
 #include <limits>
 #include <bit>
+
+#include <minmath/common.hpp>
 
 namespace mmath
 {

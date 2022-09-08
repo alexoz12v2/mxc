@@ -1,6 +1,10 @@
 #ifndef MINMATH_FNUMBER_HPP
 #define  MINMATH_FNUMBER_HPP
 
+#include <cstdint>
+
+#include "common_private.hpp"
+
 namespace mmath
 {
     MMATH_FORCE_INLINE auto constexpr floor(float const x) -> float;

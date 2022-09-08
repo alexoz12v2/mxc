@@ -1,4 +1,4 @@
-#include "common.hpp"
+#include "minmath/common.hpp"
 
 #include <limits>
 #include <cstdint>
@@ -8,7 +8,7 @@ namespace mmath
     constexpr int32_t countLeadingZeroes(uint64_t n)
     {
         // De Brujin sequence
-        static constexpr char bitPosition[64] = {
+        constexpr char bitPosition[64] = {
             0,  1,  2,  7,  3, 13,  8, 19,  4, 25, 14, 28,  9, 34, 20, 40, 
             5, 17, 26, 38, 15, 46, 29, 48, 10, 31, 35, 54, 21, 50, 41, 57, 
             63,  6, 12, 18, 24, 27, 33, 39, 16, 37, 45, 47, 30, 53, 49, 56, 
@@ -33,8 +33,7 @@ namespace mmath
     // WARNING: THIS FUNCTION SHOULD NOT BE USED AS THERE IS IN C++20 std::bit_cast, which is
     // constexpr. It stays here because it has been a learning experience for me and I want to
     // revisit it from time to time
-    [[nodiscard]]
-        constexpr uint32_t bits(float const f)
+    constexpr uint32_t bits(float const f)
     {
         
         // check for zero. DEFECT: cannot distinguish between negative and positive zero
@@ -43,10 +42,10 @@ namespace mmath
             return 0x00000000; // or 0x80000000 for negative zero
         
         // check for infinity
-        if (f == std::numeric_limits<float>::infinity)
+        if (f == std::numeric_limits<float>::infinity())
             return 0x7f800000;
         
-        if (f == -std::numeric_limits<float>::infinity)
+        if (f == -std::numeric_limits<float>::infinity())
             return 0xff800000;
         
         // check for NaNs
@@ -86,7 +85,7 @@ namespace mmath
             exponent -= 41;
         }
         
-        uint64_t integerFloat = static_cast<uint64_t>(abs_t * 0x1p-64f);
+        uint64_t integerFloat = static_cast<uint64_t>(abs_f * 0x1p-64f);
         
         // remove leading zeroes from exponent
         int32_t lz = countLeadingZeroes(integerFloat);
@@ -119,8 +118,7 @@ namespace mmath
     }
     
     // TODO = Change implementation to use bit_cast
-    [[nodiscard]]
-        constexpr bool isDenormal(float const f)
+    constexpr bool isDenormal(float const f)
     {
         if (f == 0)
             return false;
