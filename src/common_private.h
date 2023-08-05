@@ -20,7 +20,7 @@ assert(!isDenormal((x)) && (x) != std::numeric_limits<float>::infinity()\
 do {\
 assert((x) != std::numeric_limits<float>::infinity()\
 && (x) != -std::numeric_limits<float>::infinity() && (x)==(x)/*not NaN*/\
-&& "float input is not a finite normalized number");\
+&& "float input is not a finite number, normalized or not normalized");\
 }while(false)
 
 #endif // defined(MMATH_ALLOW_DENORMAL)
@@ -31,10 +31,10 @@ assert((x) != std::numeric_limits<float>::infinity()\
 #define MMATH_FORCE_INLINE __attribute__((always_inline))
 #endif
 
-/* TODO:scope resolution doesn't work in macros. Then how to check for IEEE754 floats without exposing it 
- * to the user code?
-#if std::numeric_limits<float>::is_iec559 == false
-#error "minmath requires IEEE754 floating point"
-#endif
- */
+// TODO:scope resolution doesn't work in macros. Then how to check for IEEE754 floats without exposing it 
+// to the user code?
+//#if std::numeric_limits<float>::is_iec559 == false
+//#error "minmath requires IEEE754 floating point"
+//#endif
+
 #endif // MINMATH_COMMON_PRIVATE_HPP
