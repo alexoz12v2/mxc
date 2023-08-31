@@ -1,10 +1,10 @@
-#ifndef MINMATH_COMMON_PRIVATE_HPP
-#define MINMATH_COMMON_PRIVATE_HPP
+#ifndef MXC_MATH_COMMON_PRIVATE_HPP
+#define MXC_MATH_COMMON_PRIVATE_HPP
 
 #include <cassert>
 #include <limits>
 
-#ifndef MMATH_ALLOW_DENORMAL
+#ifndef MXC_MATH_ALLOW_DENORMAL
 
 #define MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x)\
 do {\
@@ -27,8 +27,10 @@ assert((x) != std::numeric_limits<float>::infinity()\
 
 #if defined(_WIN32) && defined(_MSC_VER)
 #define MMATH_FORCE_INLINE __forceinline
+#define MXC_INLINE __forceinline
 #elif defined(__linux__) || defined(__unix) || defined(__unix__) || defined(__APPLE__) || defined (__MACH__) || defined(__GNUC__) || defined(__clang__)
 #define MMATH_FORCE_INLINE __attribute__((always_inline))
+#define MXC_INLINE __attribute__((always_inline))
 #endif
 
 // TODO:scope resolution doesn't work in macros. Then how to check for IEEE754 floats without exposing it 
@@ -37,4 +39,4 @@ assert((x) != std::numeric_limits<float>::infinity()\
 //#error "minmath requires IEEE754 floating point"
 //#endif
 
-#endif // MINMATH_COMMON_PRIVATE_HPP
+#endif // MXC_MATH_COMMON_PRIVATE_HPP

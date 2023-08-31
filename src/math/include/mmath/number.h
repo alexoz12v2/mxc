@@ -2,8 +2,8 @@
 #define  MINMATH_FNUMBER_HPP
 
 #include "common_private.h"
-#include "minmath/common.h"
-#include "minmath/fpowlog.h"
+#include "mmath/common.h"
+#include "mmath/powlog.h"
 
 #include <cstdint>
 #include <bit>
@@ -34,7 +34,7 @@ namespace mmath
 {
     namespace detail
     {
-	    static float constexpr sqrt_2pi      = 2.50662827463f;
+	static float constexpr sqrt_2pi      = 2.50662827463f;
         static float constexpr oneovere      = 0.367879441171f;
         static float constexpr ln_2pi_halved = 0.9189385332f;
     };
@@ -76,28 +76,28 @@ namespace mmath
     auto constexpr lngamma(float x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-            //https://stackoverflow.com/questions/62458079/static-constexpr-variables-in-a-constexpr-function
-            //static float constexpr ln_2pi_halved = 0.9189385332f; moved to detail namespace
+        //https://stackoverflow.com/questions/62458079/static-constexpr-variables-in-a-constexpr-function
+        //static float constexpr ln_2pi_halved = 0.9189385332f; moved to detail namespace
 
-            // logarithmic terms of the approximation
-            float const lnx = log(x);
-            float res = (x-0.5)*lnx - x + detail::ln_2pi_halved;
+        // logarithmic terms of the approximation
+        float const lnx = log(x);
+        float res = (x-0.5)*lnx - x + detail::ln_2pi_halved;
 
-            // coefficients for the polynomial part
-            float const x2 = 1377180*x*x;
-            float const x3 = 33052320*x2*x;
-            float const x4 = 396627840*x2*x2;
-            x *= 1063489;
-            x += 92502;
+        // coefficients for the polynomial part
+        float const x2 = 1377180*x*x;
+        float const x3 = 33052320*x2*x;
+        float const x4 = 396627840*x2*x2;
+        x *= 1063489;
+        x += 92502;
 
-            // Rocktaeschel's approximation
-            res += (x4+x3+x2-x) / x4;
+        // Rocktaeschel's approximation
+        res += (x4+x3+x2-x) / x4;
         return res;
     }
     auto constexpr binomial_coeff(float const x, float const k) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
-	    assert(x > 0.2f && k > 0.2f && "i");
+        assert(x > 0.2f && k > 0.2f && "i");
 
         // gamma, lngamma, exp required
         // binomial_coeff(n,k) == exp(lngamma(x+1)-lngamma(k+1)-lngamma(n-k+1))

@@ -1,11 +1,10 @@
-
 #ifndef MINMATH_CONSTANTS_HPP
 #define MINMATH_CONSTANTS_HPP
 
 #include <cstdint>
 #include <bit>
 
-namespace mmath 
+namespace mxc::math 
 {
     // inline for variables and functions allow to DEFINE, and not declare as usual, variables and
     // functions (not templates) in a HEADER, and including it in multiple translation units

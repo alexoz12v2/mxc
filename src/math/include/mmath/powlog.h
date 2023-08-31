@@ -1,15 +1,16 @@
-#ifndef MMATH_FPOWLOG_HPP
-#define MMATH_FPOWLOG_HPP
+#ifndef MXC_MATH_FPOWLOG_HPP
+#define MXC_MATH_FPOWLOG_HPP
+
+#include "mmath/constants.h"
+#include "mmath/common.h"
+#include "common_private.h"
+
 
 #include <cstdint>
 #include <cassert>
 #include <type_traits>
 #include <limits>
 #include <bit>
-
-#include "constants.h"
-#include "common.h"
-#include "common_private.h"
 
 /*
  * Outline:
@@ -35,7 +36,7 @@
  * constexpr auto log(float const x, float const b) -> float;
  */
 
-namespace mmath
+namespace mxc::math
 {
     namespace detail
     {
@@ -330,4 +331,4 @@ namespace mmath
     }
 }
 
-#endif //MMATH_FPOWLOG_HPP
+#endif //MXC_MATH_FPOWLOG_HPP

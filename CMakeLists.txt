@@ -1,34 +1,20 @@
 cmake_minimum_required(VERSION 3.23.2)
-project(minmath)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_compile_definitions(_DEBUG)
-endif()
+# file loaded at the beginning of each subdirectory listing. Basically global variables
+# TODO doesn't work
+#set(CMAKE_PROJECT_INCLUDE_BEFORE "${CMAKE_CURRENT_LIST_DIR}/common-project-include.cmake.in")
+project(mxc 
+	VERSION 0.0.1
+	DESCRIPTION "https://github.com/alexoz12v2/mxc"
+	HOMEPAGE_URL "Minimal math library, part of the MXC collection of utilities"
+	LANGUAGES C CXX CUDA ASM
+)
 
-add_library(minmath_lib STATIC  
-	"src/common.cpp"
-	"src/fnumber.cpp"
-	"src/fpowlog.cpp"
-	"src/ftrig.cpp")
+# project code
+add_subdirectory(src/platform)
+add_subdirectory(src/math)
 
-target_include_directories(minmath_lib PUBLIC 
-		"${PROJECT_SOURCE_DIR}/include"
-		"${PROJECT_SOURCE_DIR}/src")
-
-if(WIN32)
-	add_compile_definitions(_HAS_EXCEPTIONS=0)
-    if(NOT DEFINED _DEBUG)
-        target_compile_options(minmath_lib PRIVATE /std:c++20 /O2 /W4 /GR- /EHsc) 
-    else()
-        target_compile_options(minmath_lib PRIVATE /std:c++20 /O0 /W4 /DEBUG /Z7 /GR- /EHsc)
-    endif()
-else()
-    # Set the C and C++ compilers to Clang
-    set(CMAKE_C_COMPILER "/usr/bin/clang")
-    set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-    if(NOT DEFINED _DEBUG)
-        target_compile_options(minmath_lib PRIVATE -std=c++20 -O2 -Wall -Wextra -Wpedantic -Werror -fno-rtti -fno-exceptions)
-    else()
-        target_compile_options(minmath_lib PRIVATE -std=c++20 -O0 -Wall -Wextra -Wpedantic -g -Werror -fno-rtti -fno-exceptions)
-    endif()
-endif()
+# unit tests
+enable_testing()
+# add_subdirectory(src/platform/test) TODO
+add_subdirectory(src/math/test)

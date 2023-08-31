@@ -1,14 +1,14 @@
-#ifndef MINMATH_COMMON_HPP
-#define MINMATH_COMMON_HPP
+#ifndef MXC_MATH_COMMON_HPP
+#define MXC_MATH_COMMON_HPP
 
 #include <cstdint>
 #include <bit>
-#include "common_private.h"
+#include "mmath/macros.h"
 
 // TODO refactor in a class similiar to numeric limits
 #define MMATH_F32_MAX_SAFE_INTEGER 16777215
 
-namespace mmath
+namespace mxc::math
 {
     namespace detail 
     {
@@ -134,4 +134,6 @@ namespace mmath
     }
 }
 
-#endif // MINMATH_COMMON_HPP
+namespace mmath = mxc::math;
+
+#endif // MXC_MATH_COMMON_HPP

@@ -1,9 +1,9 @@
-#include "minmath/common.h"
+#include "mmath/common.h"
 
 #include <limits>
 #include <cstdint>
 
-namespace mmath
+namespace mxc::math
 {
     uint32_t bits(float const f)
     {

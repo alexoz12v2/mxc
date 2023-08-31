@@ -1,11 +1,11 @@
-#ifndef MMATH_FTRIG_HPP
-#define MMATH_FTRIG_HPP
+#ifndef MXC_MATH_FTRIG_HPP
+#define MXC_MATH_FTRIG_HPP
 
-#include "constants.h"
+#include "mmath/constants.h"
 #include "common_private.h"
-#include "minmath/fpowlog.h"
+#include "mmath/powlog.h"
 
-#include <cassert>
+#include <cassert> // TODO mxc stuff
 #include <limits>
 #include <bit>
 // TODO: hyberboilcs have naive implementations
@@ -30,7 +30,7 @@
  * float rad2deg(float const x);
  */
 
-namespace mmath
+namespace mxc::math
 {
     namespace detail
     {
@@ -284,4 +284,4 @@ namespace mmath
     }
 }
 
-#endif // MMATH_FTRIG_HPP
+#endif // MXC_MATH_FTRIG_HPP
