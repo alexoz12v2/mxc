@@ -57,7 +57,14 @@ endif()
 # dependencies
 add_dependencies(mxc-math mxc::platform)
 
-target_link_libraries(mxc-math PRIVATE mxc::platform)
+target_link_libraries(mxc-math PUBLIC mxc::platform mxc::core)
+
+# enable disable SIMD TODO config file outside
+# TODO: Is a cache variable better than having to define/undefine macros before including the header?
+set(math_VECTORIZE CACHE BOOL ON)
+if (math_VECTORIZE)
+    target_compile_definitions(mxc-math PUBLIC MXC_MATH_VECTORIZE=1)
+endif()
 
 set(math_VERSION 0.0.1)
 set_target_properties(mxc-math PROPERTIES 

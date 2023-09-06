@@ -25,14 +25,6 @@ assert((x) != std::numeric_limits<float>::infinity()\
 
 #endif // defined(MMATH_ALLOW_DENORMAL)
 
-#if defined(_WIN32) && defined(_MSC_VER)
-#define MMATH_FORCE_INLINE __forceinline
-#define MXC_INLINE __forceinline
-#elif defined(__linux__) || defined(__unix) || defined(__unix__) || defined(__APPLE__) || defined (__MACH__) || defined(__GNUC__) || defined(__clang__)
-#define MMATH_FORCE_INLINE __attribute__((always_inline))
-#define MXC_INLINE __attribute__((always_inline))
-#endif
-
 // TODO:scope resolution doesn't work in macros. Then how to check for IEEE754 floats without exposing it 
 // to the user code?
 //#if std::numeric_limits<float>::is_iec559 == false

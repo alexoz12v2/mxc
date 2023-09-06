@@ -1,8 +1,10 @@
 #ifndef MXC_MATH_VEC_H
 #define MXC_MATH_VEC_H
 
-#include "common.h"
 #include "detail/vec_base.h"
+#include "common.h"
+
+#include "mplatform/simd_dispatch.h"
 
 namespace mxc::math {
 
@@ -25,32 +27,76 @@ namespace mxc::math {
 
         Vector() : VectorBase<T,comps...>(std::array<T,sizeof...(comps)>{0}) {}
 
-        MXC_INLINE constexpr auto operator[](uint32_t i) const -> T  { return data[i]; }
-        MXC_INLINE constexpr auto operator[](uint32_t i)       -> T& { return data[i]; }
+        MXC_FORCEINLINE constexpr auto operator[](uint32_t i) const -> T  { return data[i]; }
+        MXC_FORCEINLINE constexpr auto operator[](uint32_t i)       -> T& { return data[i]; }
     };
 
     template <typename T, typename U, uint32_t... comps>
-    MXC_INLINE constexpr auto operator+(Vector<T,comps...>v1, Vector<U,comps...> v2) -> Vector<decltype(std::declval<T>()+std::declval<U>()), comps...>
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto operator+(Vector<T,comps...>v1, Vector<U,comps...> v2) -> Vector<decltype(std::declval<T>()+std::declval<U>()), comps...>
     {
-        // TODO simd + concepts
+        // TODO concepts
         Vector<decltype(std::declval<T>()+std::declval<U>()), comps...> vsum;
+#if !defined(MXC_MATH_VECTORIZE) // set if CMake Cache Variable math_VECTORIZE is set
         for (uint32_t i = 0; i != sizeof...(comps); ++i)
             vsum[i] = v1[i] + v2[i];
+#else
+        MXC_TRACE("executing vectorized branch");
+        MXC_WARN("benchmark to see if vectorization helps");
+        if constexpr(sizeof...(comps) == 2)
+        {
+            MXC_SIMD_DISPATCH(addf2, &v1.data, &v2.data, &vsum.data);
+        }
+        if constexpr(sizeof...(comps) == 3)
+        {
+            MXC_SIMD_DISPATCH(addf3, &v1.data, &v2.data, &vsum.data);
+        }
+        if constexpr(sizeof...(comps) == 4)
+        {
+            MXC_SIMD_DISPATCH(addf4, &v1.data, &v2.data, &vsum.data);
+        }
+        else
+        {
+            MXC_SIMD_DISPATCH(addfv, &v1.data, &v2.data, &vsum.data, sizeof...(comps));
+        }
+#endif
         return vsum;
     }
 
     template <typename T, typename U, uint32_t... comps>
-    MXC_INLINE constexpr auto operator-(Vector<T,comps...> v1, Vector<U,comps...> v2) -> Vector<decltype(std::declval<T>()+std::declval<U>()), comps...>
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto operator-(Vector<T,comps...> v1, Vector<U,comps...> v2) -> Vector<decltype(std::declval<T>()-std::declval<U>()), comps...>
     {
-        // TODO simd
+#if !defined(MXC_MATH_VECTORIZE) // set if CMake Cache Variable math_VECTORIZE is set
         Vector<decltype(std::declval<T>()+std::declval<U>()), comps...> vsum;
         for (uint32_t i = 0; i != sizeof...(comps); ++i)
             vsum[i] = v1[i] - v2[i];
+#else
+        MXC_TRACE("executing vectorized branch");
+        MXC_WARN("benchmark to see if vectorization helps");
+        if constexpr(sizeof...(comps) == 2)
+        {
+            MXC_SIMD_DISPATCH(subf2, &v1.data, &v2.data, &vsum.data);
+        }
+        if constexpr(sizeof...(comps) == 3)
+        {
+            MXC_SIMD_DISPATCH(subf3, &v1.data, &v2.data, &vsum.data);
+        }
+        if constexpr(sizeof...(comps) == 4)
+        {
+            MXC_SIMD_DISPATCH(subf4, &v1.data, &v2.data, &vsum.data);
+        }
+        else
+        {
+            MXC_SIMD_DISPATCH(subfv, &v1.data, &v2.data, &vsum.data, sizeof...(comps));
+        }
+#endif
         return vsum;
     }
 
     template <typename T, uint32_t... comps>
-    MXC_INLINE constexpr auto operator*(Vector<T,comps...> v, T s) -> Vector<T, comps...>
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto operator*(Vector<T,comps...> v, T s) -> Vector<T, comps...>
     {
         // TODO simd
         Vector<T,comps...> v1;
@@ -60,29 +106,26 @@ namespace mxc::math {
     }
 
     template <typename T, uint32_t... comps>
-    MXC_INLINE constexpr auto operator*(T s, Vector<T,comps...> v) -> Vector<T, comps...>
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto operator*(T s, Vector<T,comps...> v) -> Vector<T, comps...>
     {
         return operator*(v,s);
     }
 
     template <typename T, uint32_t... comps>
-    MXC_INLINE constexpr auto operator/(Vector<T,comps...> v, T s) -> Vector<T, comps...>
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto operator/(Vector<T,comps...> v, T s) -> Vector<T, comps...>
     {
         // TODO simd
         Vector<T,comps...> v1;
         for (uint32_t i = 0; i != sizeof...(comps); ++i)
             v1[i] = s*v[i];
         return v1;
-    }
-
-    template <typename T, uint32_t... comps>
-    MXC_INLINE constexpr auto operator/(T s, Vector<T,comps...> v) -> Vector<T, comps...>
-    {
-        return operator*(v,s);
     }
 
     template <typename T, typename U, uint32_t... comps>
-    MXC_INLINE constexpr auto dot(Vector<T,comps...>v1, Vector<U,comps...> v2) -> decltype(std::declval<T>()*std::declval<U>())
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto dot(Vector<T,comps...>v1, Vector<U,comps...> v2) -> decltype(std::declval<T>()*std::declval<U>())
     {
         // TODO simd
         decltype(std::declval<T>()*std::declval<U>()) innerProd {0};
@@ -92,7 +135,8 @@ namespace mxc::math {
     }
 
     template <typename T, typename U>
-    MXC_INLINE constexpr auto cross(Vector<T,0,1,2> v1, Vector<U,0,1,2> v2) -> Vector<decltype(std::declval<T>()*std::declval<U>()),0,1,2>
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto cross(Vector<T,0,1,2> v1, Vector<U,0,1,2> v2) -> Vector<decltype(std::declval<T>()*std::declval<U>()),0,1,2>
     {
         using R = decltype(std::declval<T>()*std::declval<U>());
         return (v1.y*v2.z-v1.z*v2.y)*Vector<R,0,1,2>(1,0,0)
@@ -102,7 +146,8 @@ namespace mxc::math {
     }
 
     template <typename T, uint32_t... comps>
-    MXC_INLINE constexpr auto hsum( Vector<T,comps...> v) -> T 
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto hsum( Vector<T,comps...> v) -> T 
     {
         T res {v[0]};
         for (uint32_t i = 1; i != sizeof...(comps); ++i)
@@ -111,7 +156,8 @@ namespace mxc::math {
     }
 
     template <typename T, uint32_t... comps>
-    MXC_INLINE constexpr auto hprod( Vector<T,comps...> v) -> T 
+    MXC_FORCEINLINE MXC_VECTOR_ABI constexpr 
+    auto hprod( Vector<T,comps...> v) -> T 
     {
         T res {v[0]};
         for (uint32_t i = 1; i != sizeof...(comps); ++i)

@@ -17,23 +17,23 @@
  * 
  * struct sqrt_rsqrt_return_t {float sqrt;float rsqrt;};
  *
- * MMATH_FORCE_INLINE constexpr auto sqrt(float const x) -> float;
- * MMATH_FORCE_INLINE constexpr auto sqrt_rsqrt(auto const x) -> sqrt_rsqrt_return_t;
- * MMATH_FORCE_INLINE constexpr auto rsqrt(float const x) -> float;
- * MMATH_FORCE_INLINE constexpr auto exp(float const x) -> float;
- * MMATH_FORCE_INLINE constexpr auto expm1(float const x) -> float;
- * constexpr auto ln(float const x) -> float; // can't be force inlined
- * constexpr auto log(float const x) -> float;
- * MMATH_FORCE_INLINE constexpr auto powi(float const x, int32_t const i) -> float;
- * MMATH_FORCE_INLINE constexpr auto twoxpi(int8_t x) -> float;
- * MMATH_FORCE_INLINE constexpr auto twoxp(float x) -> float;
- * constexpr auto pow(float const x, float const y) -> float;
- * constexpr auto lg(float const x) -> float;
- * constexpr auto log10(float const x) -> float;
- * MMATH_FORCE_INLINE constexpr auto lb(float const x) -> float;
- * MMATH_FORCE_INLINE constexpr auto lbp1(float const x) -> float;
- * constexpr auto log2(float const x) -> float;
- * constexpr auto log(float const x, float const b) -> float;
+ * sqrt(float const x) -> float;
+ * sqrt_rsqrt(auto const x) -> sqrt_rsqrt_return_t;
+ * rsqrt(float const x) -> float;
+ * exp(float const x) -> float;
+ * expm1(float const x) -> float;
+ * ln(float const x) -> float; // can't be force inlined
+ * log(float const x) -> float;
+ * powi(float const x, int32_t const i) -> float;
+ * twoxpi(int8_t x) -> float;
+ * twoxp(float x) -> float;
+ * pow(float const x, float const y) -> float;
+ * lg(float const x) -> float;
+ * log10(float const x) -> float;
+ * lb(float const x) -> float;
+ * lbp1(float const x) -> float;
+ * log2(float const x) -> float;
+ * log(float const x, float const b) -> float;
  */
 
 namespace mxc::math
@@ -50,7 +50,7 @@ namespace mxc::math
 
     struct sqrt_rsqrt_return_t {float sqrt;float rsqrt;};
 
-    MMATH_FORCE_INLINE auto constexpr sqrt(float const x) -> float
+    MXC_FORCEINLINE auto constexpr sqrt(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x>=0.f && "function 'sqrt' takes nonnegative inputs\n");
@@ -70,7 +70,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr sqrt_rsqrt(auto const x) -> sqrt_rsqrt_return_t
+    MXC_FORCEINLINE auto constexpr sqrt_rsqrt(auto const x) -> sqrt_rsqrt_return_t
     {
         // Goldschmidt's algorithm. Faster convergence than Newton-Raphson! Note: it computes both sqrt and rsqrt
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -93,13 +93,13 @@ namespace mxc::math
     }
 
     // TODO: implement Q_rsqrt
-    MMATH_FORCE_INLINE constexpr auto rsqrt(float const x) -> float
+    MXC_FORCEINLINE constexpr auto rsqrt(float const x) -> float
     {
         float res = sqrt_rsqrt(x).sqrt;
         return res;
     }
 
-    MMATH_FORCE_INLINE constexpr auto exp(float const x) -> float
+    MXC_FORCEINLINE constexpr auto exp(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x <= 40.2246053812f && "function 'exp' needs a number less than ln(std::numeric_limits<float>::max())");
@@ -115,7 +115,7 @@ namespace mxc::math
         return y;
     }
 
-    MMATH_FORCE_INLINE constexpr auto expm1(float const x) -> float
+    MXC_FORCEINLINE constexpr auto expm1(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x <= std::numeric_limits<float>::epsilon()
@@ -161,7 +161,7 @@ namespace mxc::math
         return res;
     } 
 
-    MMATH_FORCE_INLINE auto constexpr powi(float const x, int32_t const n) -> float
+    MXC_FORCEINLINE auto constexpr powi(float const x, int32_t const n) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         float res = 1.f;
@@ -269,7 +269,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr twoxpi(int8_t x) -> float
+    MXC_FORCEINLINE auto constexpr twoxpi(int8_t x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x >= -128 && x <= 127 && "function 'twoxp': out of expoent range for floats");
@@ -280,7 +280,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr twoxp(float x) -> float
+    MXC_FORCEINLINE auto constexpr twoxp(float x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x <= 41.2094271514 && "function 'twoxp' needs a number less than lb(std::numeric_limits<float>::max())");
@@ -317,7 +317,7 @@ namespace mxc::math
         return log2(x) / detail::lb10;
     }
 
-    MMATH_FORCE_INLINE constexpr auto log2p1(float const x) -> float
+    MXC_FORCEINLINE constexpr auto log2p1(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x > 0 && x < std::numeric_limits<float>::epsilon());

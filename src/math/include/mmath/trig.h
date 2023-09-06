@@ -41,7 +41,7 @@ namespace mxc::math
         static float constexpr deg2radFactor = 0.017453293;
         static float constexpr rad2degFactor = 57.295779513;
 
-	MMATH_FORCE_INLINE auto constexpr squarewave(float const x) -> float
+	MXC_FORCEINLINE auto constexpr squarewave(float const x) -> float
 	{
 	    int32_t const xceil = static_cast<int32_t>(x)+1;
 	    return static_cast<float>((xceil & 1) - ((xceil - 1) & 1));
@@ -49,7 +49,7 @@ namespace mxc::math
     }
     
     //https://www.desmos.com/calculator/j3agpck7hp
-    MMATH_FORCE_INLINE auto constexpr sin(float const x) -> float
+    MXC_FORCEINLINE auto constexpr sin(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         
@@ -74,12 +74,12 @@ namespace mxc::math
                    +0.995626*arg);
     }
 
-    MMATH_FORCE_INLINE auto constexpr cos(float const x) -> float
+    MXC_FORCEINLINE auto constexpr cos(float const x) -> float
     {
         return sin(detail::pihalved - x);
     }
 
-    MMATH_FORCE_INLINE auto constexpr tan(float const x) -> float
+    MXC_FORCEINLINE auto constexpr tan(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         // compile time constants
@@ -103,7 +103,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr asin(float x) -> float
+    MXC_FORCEINLINE auto constexpr asin(float x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x <= 1.f && x >= -1.f && "function 'asin' takes a number between -1 and 1");
@@ -125,13 +125,13 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr acos(float const x) -> float
+    MXC_FORCEINLINE auto constexpr acos(float const x) -> float
     {
         float const res = asin(-x)+detail::pihalved;
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr atan(float const x) -> float
+    MXC_FORCEINLINE auto constexpr atan(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         // https://www.desmos.com/calculator/gzmsinxkad
@@ -148,7 +148,7 @@ namespace mxc::math
         }
     }
 
-    MMATH_FORCE_INLINE auto constexpr atan2(float const x, float const y) -> float
+    MXC_FORCEINLINE auto constexpr atan2(float const x, float const y) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(y);
@@ -189,7 +189,7 @@ namespace mxc::math
         }
     }
 
-    MMATH_FORCE_INLINE auto constexpr sinh(float const x) -> float
+    MXC_FORCEINLINE auto constexpr sinh(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         
@@ -206,7 +206,7 @@ namespace mxc::math
         }
     }
 
-    MMATH_FORCE_INLINE auto constexpr cosh(float const x) -> float
+    MXC_FORCEINLINE auto constexpr cosh(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         
@@ -214,7 +214,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr tanh(float const x) -> float
+    MXC_FORCEINLINE auto constexpr tanh(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         float const inv_exp2x_p1 = 1.f/(exp(2.f*x)+1.f);
@@ -232,7 +232,7 @@ namespace mxc::math
         }
     }
 
-    MMATH_FORCE_INLINE auto constexpr asinh(float const x) -> float
+    MXC_FORCEINLINE auto constexpr asinh(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x < std::bit_cast<float>(0x7f7fffff)
@@ -243,7 +243,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr acosh(float const x) -> float
+    MXC_FORCEINLINE auto constexpr acosh(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x>=1.f && "function 'acosh' is defined for values greater than 1.f\n");
@@ -255,7 +255,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr atanh(float const x) -> float
+    MXC_FORCEINLINE auto constexpr atanh(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(x <= 1.f && x >= -1.f 
@@ -271,13 +271,13 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr deg2rad(float const x) -> float
+    MXC_FORCEINLINE auto constexpr deg2rad(float const x) -> float
     {
         float const res = detail::deg2radFactor *x;
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr rad2deg(float const x) -> float
+    MXC_FORCEINLINE auto constexpr rad2deg(float const x) -> float
     {
         float const res = detail::rad2degFactor *x;
         return res;

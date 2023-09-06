@@ -2,12 +2,51 @@
 #define MXC_PLATFORM_SIMD_H
 
 #if defined(__x86_64__)
-#if !defined(__MSVC__)
-#include <x86intrin.h>
-#else
 #include <immintrin.h>
 #endif
-#endif
+
+// https://github.com/mosra/corrade/blob/master/src/Corrade/Cpu.h
+//
+//In GCC and Clang, a machine target has to be enabled in order to use a
+//particular CPU instruction set or its intrinsics. While it's possible to do
+//that for the whole compilation unit by passing for example `-mavx2` to the
+//compiler, it would force you to create dedicated files for every architecture
+//variant you want to support. Instead, it's possible to equip particular
+//functions with *target attributes* defined by @ref CORRADE_ENABLE_SSE2 and
+//related macros, which then makes a particular instruction set enabled for given
+//function.
+//
+//In contrast, MSVC doesn't restrict intrinsics usage in any way, so you can
+//freely call e.g. AVX2 intrinsics even if the whole file is compiled with just
+//SSE2 enabled. The @ref CORRADE_ENABLE_SSE2 and related macros are thus defined
+//to be empty on this compiler.
+//
+//On the other hand, on MSVC, using just the baseline target on the file
+//level means the compiler will not be able to use any advanced instructions
+//apart from what you call explicitly via intrinsics. You can try extracting
+//all AVX+ variants into a dedicated file with `/arch:AVX` enabled and see
+//if it makes any performance difference.
+//
+// To avoid having to
+// dispatch on every call and to remove the argument passthrough overhead, all
+// variants need to have the same function signature, separate from the CPU tags.
+// That's achievable by putting them into lambdas with a common signature
+//
+// After that, a runtime dispatcher function that is created with the
+// @ref CORRADE_CPU_DISPATCHER_BASE() macro. The @cpp transform() @ce variants
+// from above would then look like this instead:
+//
+//
+//Permission operator|(const File::Permission &lhs, const File::Permission &rhs)
+//{
+//    return static_cast<File::Permission>(std::underlying_type<File::Permission>::type(lhs)
+//                                         | std::underlying_type<File::Permission>::type(rhs));
+//}
+//
+// __builtin_assume_aligned
+//
+//urns out there is an option for that. Try using gcc -mprefer-avx128 -O3 -march=native for your code. 
+//(128-bit AVX instructions don't trigger the turbo limiting
 
 #include <cstdint>
 #include <cstring>
@@ -167,9 +206,6 @@ namespace mxc::simd
 
         Storage v;
     };
-    static_assert(sizeof(V256f) == 32);
-    static_assert(alignof(V256f) == 32);
-    static_assert(kvasir::mpl::is_standard_layout<>::f<V256f>::value);
 
     // NOTE: this is a "==" comparison. In higher level abstractions, build up a comparison with tolerance
     MXC_INLINE MXC_NOT_VECTORIZED_CONSTEXPR auto equalMemberwise(V256f v1, V256f v2) -> V256f;

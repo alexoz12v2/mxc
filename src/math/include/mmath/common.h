@@ -1,9 +1,11 @@
 #ifndef MXC_MATH_COMMON_HPP
 #define MXC_MATH_COMMON_HPP
 
+#include "mmath/macros.h"
+#include "mcore/macros.h"
+
 #include <cstdint>
 #include <bit>
-#include "mmath/macros.h"
 
 // TODO refactor in a class similiar to numeric limits
 #define MMATH_F32_MAX_SAFE_INTEGER 16777215
@@ -47,7 +49,7 @@ namespace mxc::math
     // infinity is present in c++ standard in the limits header, while
     // NaNs can be tested with condition (f != f). Therefore, only an implementation
     // of isDenormal has to be provided
-    MMATH_FORCE_INLINE auto constexpr isDenormal(float const f) -> bool
+    MXC_FORCEINLINE auto constexpr isDenormal(float const f) -> bool
     {
         if (f == 0)
             return false;
@@ -65,7 +67,7 @@ namespace mxc::math
         return exponent <= 0;
     }
 
-    MMATH_FORCE_INLINE auto constexpr abs(float const x) -> float
+    MXC_FORCEINLINE auto constexpr abs(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         float const res = x > 0.f ? x : -x;
@@ -73,7 +75,7 @@ namespace mxc::math
     }
 
     // result given as a float to get bigger numbers with 32 bits
-    MMATH_FORCE_INLINE auto constexpr floor(float const x) -> float
+    MXC_FORCEINLINE auto constexpr floor(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         assert(MMATH_F32_MAX_SAFE_INTEGER > x && "flooring the number will result in precision loss");
@@ -83,7 +85,7 @@ namespace mxc::math
         return x_truncated;
     }
 
-    MMATH_FORCE_INLINE auto constexpr ceil(float const x) -> float
+    MXC_FORCEINLINE auto constexpr ceil(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         
@@ -91,7 +93,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr frac(float const x) -> float
+    MXC_FORCEINLINE auto constexpr frac(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         
@@ -99,7 +101,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr round(float const x) -> float
+    MXC_FORCEINLINE auto constexpr round(float const x) -> float
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         
@@ -107,7 +109,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr min(float const x, float const y) -> bool
+    MXC_FORCEINLINE auto constexpr min(float const x, float const y) -> bool
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(y);
@@ -115,7 +117,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE auto constexpr max(float const x, float const y) -> bool
+    MXC_FORCEINLINE auto constexpr max(float const x, float const y) -> bool
     {
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
         MMATH_ASSERT_FINITE_NORMALIZED_FLOAT(x);
@@ -123,7 +125,7 @@ namespace mxc::math
         return res;
     }
 
-    MMATH_FORCE_INLINE 
+    MXC_FORCEINLINE 
     auto constexpr close(float const x,             float const y,
                          float const rel_tol=1e-9f, float const abs_tol=1e-8f) -> bool
     {

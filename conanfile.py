@@ -15,8 +15,8 @@ class MXCMathRecipe(ConanFile):
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    options = {"shared": [True, False], "fPIC": [True, False], "link_time_optimized": [True, False]}
+    default_options = {"shared": False, "fPIC": True, "link_time_optimized": False}
 
     # Sources (use source method if source is not present locally)
     export_sources = "CMakeLists.txt", "src/*"
@@ -31,22 +31,24 @@ class MXCMathRecipe(ConanFile):
     # dependencies
     def requirements(self):
         self.requires("catch2/3.4.0")
+        self.requires("fmt/10.1.1")
 
     # information for each component (.lib) we want to provide. each component needs to define 
     # 1) libs 2) requires 3) set_property
     def package_info(self):
-        #self.cpp_info.components["core"].libs = ["core"]
-        #self.cpp_info.components["core"].set_property = ["cmake_target_name", "core"]
+        self.cpp_info.components["core"].libs = ["core"]
+        self.cpp_info.components["core"].set_property = ["cmake_target_name", "mxc::core"]
 
         self.cpp_info.components["platform"].libs = ["platform"]
-        # self.cpp_info.components["platform"].requires = ["core"]
-        self.cpp_info.components["platform"].set_property = ["cmake_target_name", "platform"]
+        self.cpp_info.components["platform"].requires = ["core"]
+        self.cpp_info.components["platform"].set_property = ["cmake_target_name", "mxc::platform"]
 
         self.cpp_info.components["math"].libs = ["math"]
         self.cpp_info.components["math"].requires = ["platform"]
-        self.cpp_info.components["math"].set_property = ["cmake_target_name", "mxc-math"]
+        self.cpp_info.components["math"].set_property = ["cmake_target_name", "mxc::math"]
 
     def config_options(self):
+        # TODO: How can This be modified to support cross compilation
         if self.settings.os == "Windows":
             del self.options.fPIC
 
