@@ -53,7 +53,7 @@
 #define MXC_X86_64_SUPPORTED_AVXHalfToFloat32Conversions false
 #define MXC_X86_64_SUPPORTED_AVX10 false
 
-// WARNING: DEPRECATED, DO NOT USE. 
+// WARNING: DEPRECATED, DO NOT USE.
 // generated at build time
 namespace mxc::platform
 {

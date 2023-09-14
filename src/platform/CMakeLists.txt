@@ -52,11 +52,13 @@ add_library(bmi1       OBJECT)
 add_library(f16c       OBJECT)
 add_library(fma3       OBJECT)
 add_library(popcnt     OBJECT)
+add_library(sse        OBJECT)
 add_library(sse2       OBJECT)
 add_library(sse3       OBJECT)
 add_library(sse4_1     OBJECT)
 add_library(sse4_2     OBJECT)
 add_library(ssse3      OBJECT)
+add_library(sse_vex    OBJECT)
 add_library(sse2_vex   OBJECT)
 add_library(sse3_vex   OBJECT)
 add_library(sse4_1_vex OBJECT)
@@ -74,11 +76,13 @@ target_sources(bmi1       PRIVATE src/x86_64/extensions/bmi1.cpp)
 target_sources(f16c       PRIVATE src/x86_64/extensions/f16c.cpp)
 target_sources(fma3       PRIVATE src/x86_64/extensions/fma3.cpp)
 target_sources(popcnt     PRIVATE src/x86_64/extensions/popcnt.cpp)
+target_sources(sse        PRIVATE src/x86_64/extensions/sse.cpp)
 target_sources(sse2       PRIVATE src/x86_64/extensions/sse2.cpp)
 target_sources(sse3       PRIVATE src/x86_64/extensions/sse3.cpp)
 target_sources(sse4_1     PRIVATE src/x86_64/extensions/sse4_1.cpp)
 target_sources(sse4_2     PRIVATE src/x86_64/extensions/sse4_2.cpp)
 target_sources(ssse3      PRIVATE src/x86_64/extensions/ssse3.cpp)
+target_sources(sse_vex    PRIVATE src/x86_64/extensions/sse.cpp)
 target_sources(sse2_vex   PRIVATE src/x86_64/extensions/sse2.cpp)
 target_sources(sse3_vex   PRIVATE src/x86_64/extensions/sse3.cpp)
 target_sources(sse4_1_vex PRIVATE src/x86_64/extensions/sse4_1.cpp)
@@ -93,13 +97,13 @@ target_sources(ssse3_vex  PRIVATE src/x86_64/extensions/ssse3.cpp)
 #
 # source: https://stackoverflow.com/questions/76428057/do-all-cpus-that-support-avx2-also-support-bmi2-or-popcnt
 #
-# To be as safe as possible, all instruction set extensions "auxiliary" to SIMD extensions are checked independently, and composed together with 
+# To be as safe as possible, all instruction set extensions "auxiliary" to SIMD extensions are checked independently, and composed together with
 # different translation units containing functions which forward all their arguments to the relevant intrinsic
 # exceptions to these rules will be due to msvc /arch insufficient granularity, and are reported with a comment
 #
 if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
     # do not sett -ffast-math, as we want full IEEE compliance. The aforementioned option enables the following
-    #   -fno-math-errno, -funsafe-math-optimizations, -ffinite-math-only, -fno-rounding-math, 
+    #   -fno-math-errno, -funsafe-math-optimizations, -ffinite-math-only, -fno-rounding-math,
     #   -fno-signaling-nans, -fcx-limited-range and -fexcess-precision=fast
     # we need only a subset of these
     #
@@ -116,11 +120,13 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") OR (CMAKE_CXX_COMPILER_ID STREQUAL "C
     set(f16c_COMPILE_OPTIONS       "-mf16c;-mavx;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-msse2avx")
     set(fma3_COMPILE_OPTIONS       "-mfma;-mavx;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-msse2avx")
     set(popcnt_COMPILE_OPTIONS     "-mpopcnt;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args")
+    set(sse2_COMPILE_OPTIONS       "-msse;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-mno-sse2avx")
     set(sse2_COMPILE_OPTIONS       "-msse;-msse2;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-mno-sse2avx")
     set(sse3_COMPILE_OPTIONS       "-msse3;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-mno-sse2avx")
     set(sse4_1_COMPILE_OPTIONS     "-msse4.1;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-mno-sse2avx")
     set(sse4_2_COMPILE_OPTIONS     "-msse4.2;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-mno-sse2avx")
     set(ssse3_COMPILE_OPTIONS      "-msse3;-mssse3;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-mno-sse2avx")
+    set(sse_vex_COMPILE_OPTIONS    "-msse;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-msse2avx")
     set(sse2_vex_COMPILE_OPTIONS   "-msse;-msse2;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-msse2avx")
     set(sse3_vex_COMPILE_OPTIONS   "-msse3;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-msse2avx")
     set(sse4_1_vex_COMPILE_OPTIONS "-msse4.1;-mfpmath=sse;-fno-math-errno;-fno-signaling-nans;-fno-fp-int-builtin-inexact;-fno-trapping-math;-mno-push-args;-msse2avx")
@@ -140,11 +146,13 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(f16c_COMPILE_OPTIONS       "/arch:AVX2/fp:strict;/fp:except-;fpcvt:IA") # note: i found no way to check for these two
     set(fma3_COMPILE_OPTIONS       "/arch:AVX2/fp:strict;/fp:except-;fpcvt:IA") #       so it might not be ideal
     set(popcnt_COMPILE_OPTIONS     "/arch:AVX/fp:strict;/fp:except-;fpcvt:IA")
+    set(sse_COMPILE_OPTIONS        "/fp:strict;/fp:except-;fpcvt:IA")
     set(sse2_COMPILE_OPTIONS       "/fp:strict;/fp:except-;fpcvt:IA")
     set(sse3_COMPILE_OPTIONS       "/fp:strict;/fp:except-;fpcvt:IA")
     set(sse4_1_COMPILE_OPTIONS     "/fp:strict;/fp:except-;fpcvt:IA")
     set(sse4_2_COMPILE_OPTIONS     "/fp:strict;/fp:except-;fpcvt:IA")
     set(ssse3_COMPILE_OPTIONS      "/fp:strict;/fp:except-;fpcvt:IA")
+    set(sse_vex_COMPILE_OPTIONS    "/arch:AVX/fp:strict;/fp:except-;fpcvt:IA")
     set(sse2_vex_COMPILE_OPTIONS   "/arch:AVX/fp:strict;/fp:except-;fpcvt:IA")
     set(sse3_vex_COMPILE_OPTIONS   "/arch:AVX/fp:strict;/fp:except-;fpcvt:IA")
     set(sse4_1_vex_COMPILE_OPTIONS "/arch:AVX/fp:strict;/fp:except-;fpcvt:IA")
@@ -165,26 +173,18 @@ target_include_directories(bmi1       PRIVATE include include/mplatform include/
 target_include_directories(f16c       PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(fma3       PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(popcnt     PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
+target_include_directories(sse        PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse2       PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse3       PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
+target_include_directories(ssse3      PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse4_1     PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse4_2     PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(ssse3      PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse2       PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse3       PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse4_1     PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse4_2     PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(ssse3      PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
+target_include_directories(sse_vex    PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse2_vex   PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse3_vex   PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
+target_include_directories(ssse3_vex  PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse4_1_vex PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 target_include_directories(sse4_2_vex PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(ssse3_vex  PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse2_vex   PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse3_vex   PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse4_1_vex PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(sse4_2_vex PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
-target_include_directories(ssse3_vex  PRIVATE include include/mplatform include/mplatform/x86_64/extensions)
 
 target_link_libraries(avx        PUBLIC mxc::core)
 target_link_libraries(avx2       PUBLIC mxc::core)
@@ -197,26 +197,18 @@ target_link_libraries(bmi1       PUBLIC mxc::core)
 target_link_libraries(f16c       PUBLIC mxc::core)
 target_link_libraries(fma3       PUBLIC mxc::core)
 target_link_libraries(popcnt     PUBLIC mxc::core)
+target_link_libraries(sse        PUBLIC mxc::core)
 target_link_libraries(sse2       PUBLIC mxc::core)
 target_link_libraries(sse3       PUBLIC mxc::core)
+target_link_libraries(ssse3      PUBLIC mxc::core)
 target_link_libraries(sse4_1     PUBLIC mxc::core)
 target_link_libraries(sse4_2     PUBLIC mxc::core)
-target_link_libraries(ssse3      PUBLIC mxc::core)
-target_link_libraries(sse2       PUBLIC mxc::core)
-target_link_libraries(sse3       PUBLIC mxc::core)
-target_link_libraries(sse4_1     PUBLIC mxc::core)
-target_link_libraries(sse4_2     PUBLIC mxc::core)
-target_link_libraries(ssse3      PUBLIC mxc::core)
+target_link_libraries(sse_vex    PUBLIC mxc::core)
 target_link_libraries(sse2_vex   PUBLIC mxc::core)
 target_link_libraries(sse3_vex   PUBLIC mxc::core)
+target_link_libraries(ssse3_vex  PUBLIC mxc::core)
 target_link_libraries(sse4_1_vex PUBLIC mxc::core)
 target_link_libraries(sse4_2_vex PUBLIC mxc::core)
-target_link_libraries(ssse3_vex  PUBLIC mxc::core)
-target_link_libraries(sse2_vex   PUBLIC mxc::core)
-target_link_libraries(sse3_vex   PUBLIC mxc::core)
-target_link_libraries(sse4_1_vex PUBLIC mxc::core)
-target_link_libraries(sse4_2_vex PUBLIC mxc::core)
-target_link_libraries(ssse3_vex  PUBLIC mxc::core)
 
 target_compile_options(avx        PRIVATE ${avx_COMPILE_OPTIONS})
 target_compile_options(avx2       PRIVATE ${avx2_COMPILE_OPTIONS})
@@ -229,38 +221,26 @@ target_compile_options(bmi1       PRIVATE ${bmi1_COMPILE_OPTIONS})
 target_compile_options(f16c       PRIVATE ${f16c_COMPILE_OPTIONS})
 target_compile_options(fma3       PRIVATE ${fma3_COMPILE_OPTIONS})
 target_compile_options(popcnt     PRIVATE ${popcnt_COMPILE_OPTIONS})
+target_compile_options(sse        PRIVATE ${sse_COMPILE_OPTIONS})
 target_compile_options(sse2       PRIVATE ${sse2_COMPILE_OPTIONS})
 target_compile_options(sse3       PRIVATE ${sse3_COMPILE_OPTIONS})
+target_compile_options(ssse3      PRIVATE ${ssse3_COMPILE_OPTIONS})
 target_compile_options(sse4_1     PRIVATE ${sse4_1_COMPILE_OPTIONS})
 target_compile_options(sse4_2     PRIVATE ${sse4_2_COMPILE_OPTIONS})
-target_compile_options(ssse3      PRIVATE ${ssse3_COMPILE_OPTIONS})
-target_compile_options(sse2       PRIVATE ${sse2_COMPILE_OPTIONS})
-target_compile_options(sse3       PRIVATE ${sse3_COMPILE_OPTIONS})
-target_compile_options(sse4_1     PRIVATE ${sse4_1_COMPILE_OPTIONS})
-target_compile_options(sse4_2     PRIVATE ${sse4_2_COMPILE_OPTIONS})
-target_compile_options(ssse3      PRIVATE ${ssse3_COMPILE_OPTIONS})
+target_compile_options(sse_vex    PRIVATE ${sse_vex_COMPILE_OPTIONS})
 target_compile_options(sse2_vex   PRIVATE ${sse2_vex_COMPILE_OPTIONS})
 target_compile_options(sse3_vex   PRIVATE ${sse3_vex_COMPILE_OPTIONS})
+target_compile_options(ssse3_vex  PRIVATE ${ssse3_vex_COMPILE_OPTIONS})
 target_compile_options(sse4_1_vex PRIVATE ${sse4_1_vex_COMPILE_OPTIONS})
 target_compile_options(sse4_2_vex PRIVATE ${sse4_2_vex_COMPILE_OPTIONS})
-target_compile_options(ssse3_vex  PRIVATE ${ssse3_vex_COMPILE_OPTIONS})
-target_compile_options(sse2_vex   PRIVATE ${sse2_vex_COMPILE_OPTIONS})
-target_compile_options(sse3_vex   PRIVATE ${sse3_vex_COMPILE_OPTIONS})
-target_compile_options(sse4_1_vex PRIVATE ${sse4_1_vex_COMPILE_OPTIONS})
-target_compile_options(sse4_2_vex PRIVATE ${sse4_2_vex_COMPILE_OPTIONS})
-target_compile_options(ssse3_vex  PRIVATE ${ssse3_vex_COMPILE_OPTIONS})
 
 # MXC_SSE_AS_AVX used to choose the name of the containing C++ namespace (eg sse2:: vs sse2vex::)
+target_compile_definitions(sse_vex    PRIVATE MXC_SSE_AS_AVX=1)
 target_compile_definitions(sse2_vex   PRIVATE MXC_SSE_AS_AVX=1)
 target_compile_definitions(sse3_vex   PRIVATE MXC_SSE_AS_AVX=1)
+target_compile_definitions(ssse3_vex  PRIVATE MXC_SSE_AS_AVX=1)
 target_compile_definitions(sse4_1_vex PRIVATE MXC_SSE_AS_AVX=1)
 target_compile_definitions(sse4_2_vex PRIVATE MXC_SSE_AS_AVX=1)
-target_compile_definitions(ssse3_vex  PRIVATE MXC_SSE_AS_AVX=1)
-target_compile_definitions(sse2_vex   PRIVATE MXC_SSE_AS_AVX=1)
-target_compile_definitions(sse3_vex   PRIVATE MXC_SSE_AS_AVX=1)
-target_compile_definitions(sse4_1_vex PRIVATE MXC_SSE_AS_AVX=1)
-target_compile_definitions(sse4_2_vex PRIVATE MXC_SSE_AS_AVX=1)
-target_compile_definitions(ssse3_vex  PRIVATE MXC_SSE_AS_AVX=1)
 
 ######################################################################################################################
 # Target Configuration
@@ -287,11 +267,13 @@ target_sources(mxc-platform
         $<TARGET_OBJECTS:f16c>
         $<TARGET_OBJECTS:fma3>
         $<TARGET_OBJECTS:popcnt>
+        $<TARGET_OBJECTS:sse>
         $<TARGET_OBJECTS:sse2>
         $<TARGET_OBJECTS:sse3>
         $<TARGET_OBJECTS:sse4_1>
         $<TARGET_OBJECTS:sse4_2>
         $<TARGET_OBJECTS:ssse3>
+        $<TARGET_OBJECTS:sse_vex>
         $<TARGET_OBJECTS:sse2_vex>
         $<TARGET_OBJECTS:sse3_vex>
         $<TARGET_OBJECTS:sse4_1_vex>
@@ -325,16 +307,18 @@ target_sources(mxc-platform
             include/mplatform/x86_64/extensions/f16c.h
             include/mplatform/x86_64/extensions/fma3.h
             include/mplatform/x86_64/extensions/popcnt.h
+            include/mplatform/x86_64/extensions/sse.h
             include/mplatform/x86_64/extensions/sse2.h
             include/mplatform/x86_64/extensions/sse3.h
+            include/mplatform/x86_64/extensions/ssse3.h
             include/mplatform/x86_64/extensions/sse4_1.h
             include/mplatform/x86_64/extensions/sse4_2.h
-            include/mplatform/x86_64/extensions/ssse3.h
+            include/mplatform/x86_64/extensions/ssevex.h
             include/mplatform/x86_64/extensions/sse2vex.h
             include/mplatform/x86_64/extensions/sse3vex.h
+            include/mplatform/x86_64/extensions/ssse3vex.h
             include/mplatform/x86_64/extensions/sse4_1vex.h
             include/mplatform/x86_64/extensions/sse4_2vex.h
-            include/mplatform/x86_64/extensions/ssse3vex.h
 )
 
 # dependencies
@@ -346,12 +330,12 @@ target_link_libraries(mxc-platform PRIVATE mxc::core)
 # https://stackoverflow.com/questions/23995019/what-is-the-modern-method-for-setting-general-compile-flags-in-cmake
 # target_compile_options(foo PUBLIC "$<$<CONFIG:DEBUG>:${MY_DEBUG_OPTIONS}>")
 
-target_compile_features(mxc-platform 
+target_compile_features(mxc-platform
     PUBLIC cxx_std_20               # public headers features
-) 
+)
 
 # TODO not needed, specified in file sets
-target_include_directories(mxc-platform 
+target_include_directories(mxc-platform
     PRIVATE
         src
         include/mplatform
@@ -361,7 +345,7 @@ target_include_directories(mxc-platform
 )
 
 set(platform_VERSION 0.0.1)
-set_target_properties(mxc-platform PROPERTIES 
+set_target_properties(mxc-platform PROPERTIES
     EXPORT_NAME platform
     VERSION ${platform_VERSION}
     SOVERSION 0
@@ -383,8 +367,8 @@ install(TARGETS mxc-platform
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             COMPONENT mplatform_Runtime
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        FILE_SET interface_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} 
-        FILE_SET public_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}) 
+        FILE_SET interface_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILE_SET public_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # install PUBLIC and INTERFACE files
 set(platform_INSTALL_CMAKEDIR
@@ -404,7 +388,7 @@ export(EXPORT platformTargets
        FILE ${CMAKE_CURRENT_BINARY_DIR}/cmake/platform/platformTargets.cmake
        NAMESPACE mxc::)
 
-# alias 
+# alias
 add_library(mxc::platform ALIAS mxc-platform)
 
 include(CMakePackageConfigHelpers)
@@ -427,5 +411,5 @@ install(FILES
         DESTINATION ${platform_INSTALL_CMAKEDIR})
 
 # install target package (TODO uncomment when needed)
- # include(CMakeFindDependencyMacro) 
+ # include(CMakeFindDependencyMacro)
  # find_dependency(mxc::core)

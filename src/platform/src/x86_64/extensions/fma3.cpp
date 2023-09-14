@@ -31,4 +31,4 @@ MXC_VECTOR_ABI auto fmadd_d(v256d a, v256d b, v256d c) -> v256d
     return fma;
 }
 
-} // namespace mxc::platform::x86_64::fma3 
+} // namespace mxc::platform::x86_64::fma3

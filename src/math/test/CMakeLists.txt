@@ -4,10 +4,10 @@ project(mathTests)
 enable_testing()
 
 # dependencies
-find_package(Catch2 3 CONFIG REQUIRED) # find_package has 2 overloads: MODULE (prefer system installed library and 
+find_package(Catch2 3 CONFIG REQUIRED) # find_package has 2 overloads: MODULE (prefer system installed library and
                                        # search for find script) and CONFIG(look for a package config file)
                                        # default is MODULE, can change with set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-## if you are in the test directory and didn't build the main lib yet, include guard will take care of it 
+## if you are in the test directory and didn't build the main lib yet, include guard will take care of it
 #if (NOT TARGET mxc::math)
 #    set(math_DIR ${CMAKE_CURRENT_BINARY_DIR}/../)
 #    find_package(math CONFIG REQUIRED)
@@ -33,7 +33,7 @@ find_package(Catch2 3 CONFIG REQUIRED) # find_package has 2 overloads: MODULE (p
 add_executable(tests vec.cpp)
 
 # executables with Catch2-provided main
-target_link_libraries(tests 
+target_link_libraries(tests
     PRIVATE mxc::math Catch2::Catch2WithMain
 )
 

@@ -7,7 +7,7 @@ endif()
 # library defini
 add_library(mxc-math)
 target_sources(mxc-math
-    PRIVATE 
+    PRIVATE
         src/common.cpp
     PUBLIC
         FILE_SET public_headers
@@ -33,7 +33,7 @@ target_sources(mxc-math
 target_compile_features(mxc-math PUBLIC cxx_std_20)
 
 # TODO not needed, specified in file sets
-target_include_directories(mxc-math 
+target_include_directories(mxc-math
     PRIVATE
         src
         include/mmath
@@ -67,11 +67,11 @@ if (math_VECTORIZE)
 endif()
 
 set(math_VERSION 0.0.1)
-set_target_properties(mxc-math PROPERTIES 
+set_target_properties(mxc-math PROPERTIES
     VERSION ${math_VERSION}
     SOVERSION 0
     INTERFACE_math_MAJOR_VERSION 0
-    EXPORT_NAME math 
+    EXPORT_NAME math
     OUTPUT_NAME mmath
 )
 set_property(TARGET mxc-math APPEND PROPERTY COMPATIBLE_INTERFACE_STRING math_MAJOR_VERSION)
@@ -97,7 +97,7 @@ set(math_INSTALL_CMAKEDIR
     CACHE STRING "Path to SomeProj cmake files"
 )
 
-#install(FILES 
+#install(FILES
 #            include/mmath/common.h
 #            include/mmath/powlog.h
 #            include/mmath/constants.h
@@ -139,8 +139,8 @@ write_basic_package_version_file(mathConfigVersion.cmake
     VERSION ${math_VERSION}
     COMPATIBILITY SameMajorVersion)
 
-install(FILES 
-            ${CMAKE_CURRENT_BINARY_DIR}/mathConfig.cmake 
+install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/mathConfig.cmake
             ${CMAKE_CURRENT_BINARY_DIR}/mathConfigVersion.cmake
         DESTINATION lib/cmake/math)
 

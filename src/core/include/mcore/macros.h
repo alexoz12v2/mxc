@@ -16,4 +16,4 @@
 #error "OS/compiler not supported"
 #endif
 
-#endif //MXC_CORE_MACROS_H
+#endif // MXC_CORE_MACROS_H

@@ -1,4 +1,4 @@
-# mxc::math
+# Component mxc::math
 small math library written with the sole purpose of learning
 
 Planning:

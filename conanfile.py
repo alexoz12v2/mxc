@@ -1,11 +1,15 @@
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
-from conan.tools.build import check_min_cppstd 
+from conan.tools.build import check_min_cppstd
+from conan.tools.cmake import CMake
+from conan.tools.cmake import cmake_layout
+from conan.tools.cmake import CMakeDeps
+from conan.tools.cmake import CMakeToolchain
 from conan.tools.scm import Git
+
 
 class MXCMathRecipe(ConanFile):
     name = "mxc"
-    version = "0.0.1" # coincides with cmake's project declared version
+    version = "0.0.1"  # coincides with cmake's project declared version
 
     author = "alexoz12v2 oboken1974@hotmail.it"
     license = "BSD 2-Clause License"
@@ -21,9 +25,9 @@ class MXCMathRecipe(ConanFile):
     # Sources (use source method if source is not present locally)
     export_sources = "CMakeLists.txt", "src/*"
 
-#    def sources(self):
-#        git = Git(self)
-#        git.clone
+    #    def sources(self):
+    #        git = Git(self)
+    #        git.clone
 
     def validate(self):
         check_min_cppstd(self, "20")
@@ -33,7 +37,7 @@ class MXCMathRecipe(ConanFile):
         self.requires("catch2/3.4.0")
         self.requires("fmt/10.1.1")
 
-    # information for each component (.lib) we want to provide. each component needs to define 
+    # information for each component (.lib) we want to provide. each component needs to define
     # 1) libs 2) requires 3) set_property
     def package_info(self):
         self.cpp_info.components["core"].libs = ["core"]
