@@ -92,28 +92,29 @@ MXC_VECTOR_ABI auto min_d(v256d v0, v256d v1) -> v256d;
 // then res <- [ b[0]*sum, b[1]*sum, b[2]*sum, b[3]*sum ]
 // notice that ctrl controls the behaviour of a sigle lane of 4, not the whole 8-element vector
 template <int32_t ctrl> requires ((ctrl & 0x0000'00ff) == 0)
-MXC_VECTOR_ABI conditionalDotProduct_f(v256f v0, v256f v1) -> v256f;
+MXC_VECTOR_ABI auto conditionalDotProduct_f(v256f v0, v256f v1) -> v256f;
 
 MXC_VECTOR_ABI auto floor_f(v256f v0) -> v256f;
 MXC_VECTOR_ABI auto floor_d(v256d v0) -> v256d;
 
 template <int32_t lane> requires (lane == 0 || lane == 1)
-MXC_VECTOR_ABI insertv128_f(v256f vSource, v128f vOperand) -> v256f;     // _mm256_insertf128_ps
+MXC_VECTOR_ABI auto insertv128_f(v256f vSource, v128f vOperand) -> v256f; // _mm256_insertf128_ps
 template <int32_t lane> requires (lane == 0 || lane == 1)
-MXC_VECTOR_ABI insertv128_d(v256d vSource, v128d vOperand) -> v256d;     // _mm256_insertf128_ps
+MXC_VECTOR_ABI auto insertv128_d(v256d vSource, v128d vOperand) -> v256d; // _mm256_insertf128_ps
 template <int32_t lane> requires (lane == 0 || lane == 1)
-MXC_VECTOR_ABI insertv128_ix(v256ix vSource, v128ix vOperand) -> v256ix; // _mm256_insertf128_si256
+                                                                       // _mm256_insertf128_si256
+MXC_VECTOR_ABI auto insertv128_ix(v256ix vSource, v128ix vOperand) -> v256ix;
 
-MXC_VECTOR_ABI copyEvens_d(v256d vSrc) -> v256d;     // _mm256_movedup_pd
-MXC_VECTOR_ABI copyEvens_f(v256f vSrc) -> v256f;     // _mm256_moveldup_ps
-MXC_VECTOR_ABI copyOdds_f(v256f vSrc) -> v256f;      // _mm256_movehdup_ps
+MXC_VECTOR_ABI auto copyEvens_d(v256d vSrc) -> v256d;     // _mm256_movedup_pd
+MXC_VECTOR_ABI auto copyEvens_f(v256f vSrc) -> v256f;     // _mm256_moveldup_ps
+MXC_VECTOR_ABI auto copyOdds_f(v256f vSrc) -> v256f;      // _mm256_movehdup_ps
 
 // returns a 32-bit integer, whose bits are set in the positions mapped to indices of negative 
 // values, therefore vmovmskp[sd] returns
 //      - double: a 4-bit mask
 //      - float:  a 8-bit mask
-MXC_VECTOR_ABI negatives_d(v256d v) -> int32_t;     // _mm256_movemask_pd
-MXC_VECTOR_ABI negatives_f(v256f v) -> int32_t;     // _mm256_movemask_ps
+MXC_VECTOR_ABI auto negatives_d(v256d v) -> int32_t;     // _mm256_movemask_pd
+MXC_VECTOR_ABI auto negatives_f(v256f v) -> int32_t;     // _mm256_movemask_ps
 
 MXC_VECTOR_ABI auto mul_f(v256f v0, v256f v1) -> v256f;
 MXC_VECTOR_ABI auto mul_d(v256d v0, v256d v1) -> v256d;

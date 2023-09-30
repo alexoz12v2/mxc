@@ -4,12 +4,12 @@
 
 #if defined(MXC_DEBUG)
 #include <mcore/logging.h>
-#define MXC_SIMD_PERMUTE_CTRL(p1, p2, p3, p4)                                                                          \
-    []() -> int {                                                                                                      \
-        MXC_ASSERT((p1) >= 0u && (p1) < 4u && (p2) >= 0u && (p2) < 4u && (p3) >= 0u && (p3) < 4u && (p4) >= 0u &&      \
-                       (p4) < 4u,                                                                                      \
-                   "permutation control indices must be in between 0 and 3, inclusive");                               \
-        return ((p4 << 6) | (p3 << 4) | (p2 << 2) | p1);                                                               \
+#define MXC_SIMD_PERMUTE_CTRL(p1, p2, p3, p4)                                                   \
+    []() -> int {                                                                               \
+        MXC_ASSERT((p1) >= 0u && (p1) < 4u && (p2) >= 0u && (p2) < 4u                           \
+                    && (p3) >= 0u && (p3) < 4u && (p4) >= 0u && (p4) < 4u,                      \
+                   "permutation control indices must be in between 0 and 3, inclusive");        \
+        return ((p4 << 6) | (p3 << 4) | (p2 << 2) | p1);                                        \
     }()
 #else
 #define MXC_SIMD_PERMUTE_CTRL(p1, p2, p3, p4) (((p4) << 6) | ((p3) << 4) | ((p2) << 2) | (p1))
@@ -35,9 +35,11 @@ template <> struct highbitindex<1>
 } // namespace mxc::platform::x86_64::detail
 
 // expects a POT
-#define MXC_ASSUME_ALIGNED(p, align)                                                                                   \
-    __assume(((((char *)p) - ((char *)0)) << (mxc::platform::x86_64::detail::highbitindex<align>::value)) == 0),       \
-        reinterpret_cast<void *>(p) #else
+#define MXC_ASSUME_ALIGNED(p, align)                                                            \
+    __assume(((((char *)p) - ((char *)0)) <<                                                    \
+             (mxc::platform::x86_64::detail::highbitindex<align>::value)) == 0),                \
+        reinterpret_cast<void *>(p)
+#else
 #error "Compiler not supported"
 #endif // defined(__GNUC__) || defined(__clang__)
 

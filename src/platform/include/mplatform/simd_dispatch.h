@@ -35,6 +35,11 @@
 
 namespace mxc::simd
 {
+/********************************************************************************
+ * DO NOT USE DIRECT FUNCTIONS. 
+ * PASSING DIRECTLY AVX REGISTERS WITHOUT ENABLING IT CHANGES ABI. 
+ * BUILD UP HIGHER ORDER ABSTRACTIONS AND REMOVE THIS BROKEN DISPATCHING CODE
+ ********************************************************************************/
 // TODO: instead of chaining indirect calls to low level functions, provide for each instruction set higher level
 // functionality to reduce the
 //       number of dynamic dispatches

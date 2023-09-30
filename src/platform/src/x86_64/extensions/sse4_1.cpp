@@ -46,7 +46,7 @@ MXC_VECTOR_ABI auto min_i8(v128i8 v0, v128i8 v1) -> v128i8
 }
 
 template <int32_t bits>
-    requires((bits & 0x0000'0007) == 0)
+    requires((bits & 0x0000'00ff) == 0)
 MXC_VECTOR_ABI auto selectiveSAD_u8(v128u8 vSource, v128u8 vChoices) -> v128i16
 {
     v128i16 vRes = _mm_mpsadbw_epu8(vSource, vChoices, bits);

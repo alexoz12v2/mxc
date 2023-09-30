@@ -332,108 +332,108 @@ MXC_VECTOR_ABI auto store_i64(v256i64 v, int8_t *MXC_RESTRICT out_i64arrAligned3
     _mm256_store_si256(pi64, v);
 }
 
-tag MXC_VECTOR_ABI auto addsub_f(v256f v0, v256f v1) -> v256f;
-tag MXC_VECTOR_ABI auto addsub_d(v256d v0, v256d v1) -> v256d;
+MXC_VECTOR_ABI auto addsub_f(v256f v0, v256f v1) -> v256f;
+MXC_VECTOR_ABI auto addsub_d(v256d v0, v256d v1) -> v256d;
 
 template <int32_t ctrl> requires ((ctrl & 0x0000'00ff) == 0) 
-tag MXC_VECTOR_ABI auto choose_f(v256f v0, v256f v1) -> v256f;
+MXC_VECTOR_ABI auto choose_f(v256f v0, v256f v1) -> v256f;
 template <int32_t ctrl> requires ((ctrl & 0x0000'00ff) == 0) 
-tag MXC_VECTOR_ABI auto choose_d(v256f v0, v256f v1) -> v256f;
+MXC_VECTOR_ABI auto choose_d(v256f v0, v256f v1) -> v256f;
 
-tag MXC_VECTOR_ABI auto chooseVariable_f(v256f v0, v256f v1, v256f mask) -> v256f;
-tag MXC_VECTOR_ABI auto chooseVariable_d(v256d v0, v256d v1, v256d mask) -> v256d;
+MXC_VECTOR_ABI auto chooseVariable_f(v256f v0, v256f v1, v256f mask) -> v256f;
+MXC_VECTOR_ABI auto chooseVariable_d(v256d v0, v256d v1, v256d mask) -> v256d;
 
-tag MXC_VECTOR_ABI auto loadfrom4_f(v128f const * MXC_RESTRICT farr4) -> v256f; // broadcast_ps
-tag MXC_VECTOR_ABI auto loadfrom4_d(v128d const * MXC_RESTRICT darr4) -> v256d; // broadcast_pd
+MXC_VECTOR_ABI auto loadfrom4_f(v128f const * MXC_RESTRICT farr4) -> v256f; // broadcast_ps
+MXC_VECTOR_ABI auto loadfrom4_d(v128d const * MXC_RESTRICT darr4) -> v256d; // broadcast_pd
 
-tag MXC_VECTOR_ABI auto toBits_f(v256f v) -> v256ix;        // _mm256_castps_si256
-tag MXC_VECTOR_ABI auto toBits_d(v256d v) -> v256ix;        // _mm256_castpd_si256
-tag MXC_VECTOR_ABI auto fromBits_f(v256f v) -> v256ix;      // _mm256_castsi256_ps
-tag MXC_VECTOR_ABI auto fromBits_d(v256d v) -> v256ix;      // _mm256_castsi256_pd
+MXC_VECTOR_ABI auto toBits_f(v256f v) -> v256ix;        // _mm256_castps_si256
+MXC_VECTOR_ABI auto toBits_d(v256d v) -> v256ix;        // _mm256_castpd_si256
+MXC_VECTOR_ABI auto fromBits_f(v256f v) -> v256ix;      // _mm256_castsi256_ps
+MXC_VECTOR_ABI auto fromBits_d(v256d v) -> v256ix;      // _mm256_castsi256_pd
 
 template <int32_t lane> requires (lane == 0 || lane == 1)
-tag MXC_VECTOR_ABI auto extractf128_ix(v256ix v0) -> v128ix;
+MXC_VECTOR_ABI auto extractf128_ix(v256ix v0) -> v128ix;
 
-tag MXC_VECTOR_ABI auto maskload_f(
+MXC_VECTOR_ABI auto maskload_f(
     float const *MXC_RESTRICT farrAligned16, 
     v128ix vMask) -> v128f;
-tag MXC_VECTOR_ABI auto maskload256_f(
+MXC_VECTOR_ABI auto maskload256_f(
     float const *MXC_RESTRICT farrAligned32, 
     v256ix vMask) -> v256f;
-tag MXC_VECTOR_ABI auto maskload_d(
+MXC_VECTOR_ABI auto maskload_d(
     double const *MXC_RESTRICT darrAligned16, 
     v128ix vMask) -> v128d;
-tag MXC_VECTOR_ABI auto maskload256_d(
+MXC_VECTOR_ABI auto maskload256_d(
     double const *MXC_RESTRICT darrAligned32, 
     v256ix vMask) -> v256d;
 
-tag MXC_VECTOR_ABI auto maskstore_f(
+MXC_VECTOR_ABI auto maskstore_f(
     v128f v, 
     float *MXC_RESTRICT farrAligned16, 
     v128ix mask) -> void;
-tag MXC_VECTOR_ABI auto maskstore256_f(
+MXC_VECTOR_ABI auto maskstore256_f(
     v256f v, 
     float *MXC_RESTRICT arrAligned32, 
     v256ix mask) -> void;
-tag MXC_VECTOR_ABI auto maskstore_d(
+MXC_VECTOR_ABI auto maskstore_d(
     v128d v, 
     float *MXC_RESTRICT darrAligned16, 
     v128ix mask) -> void;
-tag MXC_VECTOR_ABI auto maskstore256_d(
+MXC_VECTOR_ABI auto maskstore256_d(
     v256d v, 
     double *MXC_RESTRICT arAligned32, 
     v256ix mask) -> void;
 
 template <int32_t ctrl> requires ((ctrl & 0x0000'00ff) == 0)
-MXC_VECTOR_ABI conditionalDotProduct_f(v256f v0, v256f v1) -> v256f
+MXC_VECTOR_ABI auto conditionalDotProduct_f(v256f v0, v256f v1) -> v256f
 {
     v256f const vRes = _mm256_dp_ps(v0, v1, ctrl);
     return vRes;
 }
 
 template <int32_t lane> requires (lane == 0 || lane == 1)
-MXC_VECTOR_ABI insertv128_f(v256f vSource, v128f vOperand) -> v256f
+MXC_VECTOR_ABI auto insertv128_f(v256f vSource, v128f vOperand) -> v256f
 {
     v256f const vRes = _mm256_insertf128_ps(vSource, vOperand, lane);
     return vRes;
 }
 template <int32_t lane> requires (lane == 0 || lane == 1)
-MXC_VECTOR_ABI insertv128_d(v256d vSource, v128d vOperand) -> v256d
+MXC_VECTOR_ABI auto insertv128_d(v256d vSource, v128d vOperand) -> v256d
 {
-    v256f const vRes = _mm256_insertf128_pd(vSource, vOperand);
+    v256d const vRes = _mm256_insertf128_pd(vSource, vOperand, lane);
     return vRes;
 }
 template <int32_t lane> requires (lane == 0 || lane == 1)
-MXC_VECTOR_ABI insertv128_ix(v256ix vSource, v128ix vOperand) -> v256ix
+MXC_VECTOR_ABI auto insertv128_ix(v256ix vSource, v128ix vOperand) -> v256ix
 {
-    v256ix const vRes = _mm256_insertf128_si256(vSource, vOperand);
+    v256ix const vRes = _mm256_insertf128_si256(vSource, vOperand, lane);
     return vRes;
 }
 
-MXC_VECTOR_ABI copyEvens_d(v256d vSrc) -> v256d
+MXC_VECTOR_ABI auto copyEvens_d(v256d vSrc) -> v256d
 {
     v256d const vRes = _mm256_movedup_pd(vSrc);
     return vRes;
 }
-MXC_VECTOR_ABI copyEvens_f(v256f vSrc) -> v256f
+MXC_VECTOR_ABI auto copyEvens_f(v256f vSrc) -> v256f
 {
     v256f const vRes = _mm256_moveldup_ps(vSrc);
     return vRes;
 }
-MXC_VECTOR_ABI copyOdds_f(v256f vSrc) -> v256f
+MXC_VECTOR_ABI auto copyOdds_f(v256f vSrc) -> v256f
 {
     v256f const vRes = _mm256_movehdup_ps(vSrc);
     return vRes;
 }
 
-MXC_VECTOR_ABI negatives_d(v256d v) -> int32_t
+MXC_VECTOR_ABI auto negatives_d(v256d v) -> int32_t
 {
-    v256d const vRes = _mm256_movemask_pd(v);
+    int32_t const vRes = _mm256_movemask_pd(v);
     return vRes;
 }
-MXC_VECTOR_ABI negatives_f(v256f v) -> int32_t
+MXC_VECTOR_ABI auto negatives_f(v256f v) -> int32_t
 {
-    v256f const vRes = _mm256_movemask_ps(v);
+    int32_t const vRes = _mm256_movemask_ps(v);
     return vRes;
 }
 
@@ -492,42 +492,42 @@ MXC_VECTOR_ABI auto shuffle_d(v256d v0, v256d v1) -> v256d
 
 MXC_VECTOR_ABI auto vtestsignCF_f(v128f v0, v128f v1) -> bool
 {
-    v128f const vRes = _mm_testc_ps(v0, v1);
+    bool const vRes = static_cast<bool>(_mm_testc_ps(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignCF_f(v256f v0, v256f v1) -> bool
 {
-    v256f const vRes = _mm256_testc_ps(v0, v1);
+    bool const vRes = static_cast<bool>(_mm256_testc_ps(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignCF_d(v128d v0, v128d v1) -> bool
 {
-    v256d const vRes = _mm_testc_pd(v0, v1);
+    bool const vRes = static_cast<bool>(_mm_testc_pd(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignCF_d(v256d v0, v256d v1) -> bool
 {
-    v256d const vRes = _mm256_testc_pd(v0, v1);
+    bool const vRes = static_cast<bool>(_mm256_testc_pd(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignZF_f(v128f v0, v128f v1) -> bool
 {
-    v128f const vRes = _mm_testz_ps(v0, v1);
+    bool const vRes = static_cast<bool>(_mm_testz_ps(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignZF_f(v256f v0, v256f v1) -> bool
 {
-    v256f const vRes = _mm256_testz_ps(v0, v1);
+    bool const vRes = static_cast<bool>(_mm256_testz_ps(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignZF_d(v128d v0, v128d v1) -> bool
 {
-    v128d const vRes = _mm_testz_pd(v0, v1);
+    bool const vRes = static_cast<bool>(_mm_testz_pd(v0, v1));
     return vRes;
 }
 MXC_VECTOR_ABI auto vtestsignZF_d(v256d v0, v256d v1) -> bool
 {
-    v256d const vRes = _mm256_testz_pd(v0, v1);
+    bool const vRes = static_cast<bool>(_mm256_testz_pd(v0, v1));
     return vRes;
 }
 
@@ -543,12 +543,12 @@ MXC_VECTOR_ABI auto vunpckh_d(v256d v0, v256d v1) -> v256d
 }
 MXC_VECTOR_ABI auto vunpckl_f(v256f v0, v256f v1) -> v256f
 {
-    v256f const vRes = _mm256_unpackli_ps(v0, v1);
+    v256f const vRes = _mm256_unpacklo_ps(v0, v1);
     return vRes;
 }
 MXC_VECTOR_ABI auto vunpckl_d(v256d v0, v256d v1) -> v256d
 {
-    v256f const vRes = _mm256_unpackli_pd(v0, v1);
+    v256d const vRes = _mm256_unpacklo_pd(v0, v1);
     return vRes;
 }
 } // namespace mxc::platform::x86_64::avx

@@ -27,7 +27,7 @@ MXC_VECTOR_ABI auto min_i8(v128i8 v0, v128i8 v1) -> v128i8;
 // then compute a 16-bit wide SAD (https://en.wikipedia.org/wiki/Sum_of_absolute_differences)
 // 		for each resulting element
 template <int32_t bits>
-    requires((bits & 0x0000'0007) == 0)
+    requires((bits & 0x0000'00ff) == 0)
 MXC_VECTOR_ABI auto selectiveSAD_u8(v128u8 vSource, v128u8 vChoices) -> v128i16;
 
 // int16_t vector[8]
